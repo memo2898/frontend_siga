@@ -47,6 +47,11 @@ const Sidebar = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  // Limpiar toggles manuales cuando cambia la ruta
+  useEffect(() => {
+    setManualToggles(new Set());
+  }, [location.pathname]);
+
   // Calcular menús expandidos automáticamente basado en la ruta actual
   const autoExpandedMenus = useMemo(() => {
     const expanded = new Set<string>();
@@ -55,7 +60,7 @@ const Sidebar = () => {
     mainItems?.forEach(item => {
       if (item.submenu) {
         const hasActiveSubitem = item.submenu.some(
-          subitem => subitem.href && currentPath.startsWith(subitem.href)
+          subitem => subitem.href && (currentPath === subitem.href || currentPath.startsWith(subitem.href))
         );
         if (hasActiveSubitem || (item.href && currentPath.startsWith(item.href))) {
           expanded.add(item.id);
@@ -65,22 +70,44 @@ const Sidebar = () => {
 
     return expanded;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location.pathname]);
+  }, [location.pathname, mainItems]);
 
   // Verificar si un menú está expandido (auto o manual)
   const isMenuExpanded = (menuId: string) => {
-    return autoExpandedMenus.has(menuId) || manualToggles.has(menuId);
+    const isAutoExpanded = autoExpandedMenus.has(menuId);
+    const isManuallyToggled = manualToggles.has(menuId);
+    
+    // Si está auto-expandido (tiene hijo activo)
+    if (isAutoExpanded) {
+      // Si está manualmente cerrado, entonces cerrarlo
+      return !isManuallyToggled;
+    }
+    
+    // Si no está auto-expandido, usar el toggle manual
+    return isManuallyToggled;
   };
 
   // Toggle submenu manual
   const toggleSubmenu = (menuId: string) => {
     setManualToggles(prev => {
       const newSet = new Set(prev);
-      if (newSet.has(menuId)) {
-        newSet.delete(menuId);
+      
+      // Si está en autoExpandedMenus (tiene hijo activo), agregarlo a manualToggles para cerrarlo
+      if (autoExpandedMenus.has(menuId)) {
+        if (newSet.has(menuId)) {
+          newSet.delete(menuId);
+        } else {
+          newSet.add(menuId);
+        }
       } else {
-        newSet.add(menuId);
+        // Toggle normal
+        if (newSet.has(menuId)) {
+          newSet.delete(menuId);
+        } else {
+          newSet.add(menuId);
+        }
       }
+      
       return newSet;
     });
   };
