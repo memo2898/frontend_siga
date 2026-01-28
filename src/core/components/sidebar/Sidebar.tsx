@@ -108,6 +108,11 @@ const Sidebar = () => {
   const renderMenuItem = (item: MenuItem) => {
     const hasSubmenu = item.submenu && item.submenu.length > 0;
     const isExpanded = isMenuExpanded(item.id);
+    
+    // Verificar si algún hijo está activo
+    const hasActiveChild = hasSubmenu && item.submenu!.some(subitem => 
+      location.pathname === subitem.href || location.pathname.startsWith(subitem.href)
+    );
 
     // Si tiene submenu o onclick, usar button/div en lugar de NavLink
     if (hasSubmenu || item.onclick) {
@@ -115,7 +120,7 @@ const Sidebar = () => {
         <div key={item.id} className="menu-item-wrapper">
           <button
             type="button"
-            className="menu-item"
+            className={`menu-item ${hasActiveChild ? 'active' : ''}`}
             onClick={(e) => handleItemClick(item, e)}
           >
             <i className={item.icon}></i>
