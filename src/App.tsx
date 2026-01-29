@@ -6,6 +6,7 @@ import NotFound from "./pages/404/NotFound";
 import SidebarWrapper from './core/components/sidebar/SidebarWrapper';
 import Lobby from './pages/lobby/Lobby';
 import SedesPage from './pages/organizacion/sedes/SedesPage';
+import DireccionesPage from './pages/organizacion/direcciones/DireccionesPage';
 
 const App = () => {
   return (
@@ -22,7 +23,7 @@ const App = () => {
        
        {/* PAGINAS DE ORGANIZACION START */}
           <Route path="organizacion/sedes" element={<SedesPage/>} />
-          <Route path="organizacion/direcciones" element={<SedesPage/>} />
+          <Route path="organizacion/direcciones" element={<DireccionesPage/>} />
           <Route path="organizacion/departamentos" element={<SedesPage/>} />
        {/* PAGINAS DE ORGANIZACION END */}
 

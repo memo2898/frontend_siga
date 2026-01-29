@@ -16,6 +16,8 @@ export const getAll = async () => {
   const data = response.filter(element => 
     !EXCLUDED_STATES.includes(element.estado as string)
   );
+
+
   
   return data;
 };

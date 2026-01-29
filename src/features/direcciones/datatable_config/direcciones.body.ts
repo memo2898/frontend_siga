@@ -87,7 +87,8 @@ const actionButtonStyles = `
 
 export const toDireccionesGridRow = (direcciones: Direcciones, handlers: DireccionesHandlers): DireccionesGridRow => ({
   id: direcciones.id,
-  sede_id: direcciones.sede_id,
+
+  sede_name: direcciones.sede?.nombre ?? '',
   nombre: direcciones.nombre,
   agregado_por: direcciones.agregado_por,
   agregado_en: direcciones.agregado_en,

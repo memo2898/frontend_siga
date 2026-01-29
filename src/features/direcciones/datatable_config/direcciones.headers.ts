@@ -7,9 +7,14 @@ export const direccionesHeaders: GridieHeaderConfig[] = [
     sortable: true,
     width: '80px',
   },
+  // {
+  //   label: 'Sede Id',
+  //   type: 'number',
+  //   sortable: true,
+  // },
   {
-    label: 'Sede Id',
-    type: 'number',
+    label: 'Sede',
+    type: 'string',
     sortable: true,
   },
   {

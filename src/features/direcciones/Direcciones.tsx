@@ -13,7 +13,7 @@ import './components/DireccionesForm.css';
 
 type ModalMode = 'create' | 'edit' | 'delete' | null;
 
-function Direcciones() {
+export function Direcciones() {
   const gridieRef = useRef<GridieRef>(null);
 
   const { direcciones, meta, loading, saving, paginated, fetch, create, update, remove, sedesOptions } = useDirecciones();
@@ -144,4 +144,4 @@ function Direcciones() {
   );
 }
 
-export default Direcciones;
+//export default Direcciones;

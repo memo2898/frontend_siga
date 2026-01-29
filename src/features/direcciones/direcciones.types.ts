@@ -1,3 +1,4 @@
+import { type Sedes } from "../sedes/sedes.types";
 export interface Direcciones {
   id?: number;
   sede_id?: number;
@@ -7,6 +8,7 @@ export interface Direcciones {
   actualizado_por?: number;
   actualizado_en?: string;
   estado?: string;
+  sede:Sedes;
 }
 
 export interface DireccionesGridRow {
@@ -19,6 +21,8 @@ export interface DireccionesGridRow {
   actualizado_en?: string;
   estado?: string;
   actions: GridieActionCell[];
+  
+  sede_name: string;
 }
 
 export interface DireccionesCreateDTO {
