@@ -1,3 +1,4 @@
+import { type Direcciones } from "../direcciones/direcciones.types";
 export interface Departamentos {
   id?: number;
   direccion_id?: number;
@@ -7,6 +8,7 @@ export interface Departamentos {
   actualizado_por?: number;
   actualizado_en?: string;
   estado?: string;
+  direccion:Direcciones
 }
 
 export interface DepartamentosGridRow {
@@ -19,6 +21,7 @@ export interface DepartamentosGridRow {
   actualizado_en?: string;
   estado?: string;
   actions: GridieActionCell[];
+  direccion: string;
 }
 
 export interface DepartamentosCreateDTO {

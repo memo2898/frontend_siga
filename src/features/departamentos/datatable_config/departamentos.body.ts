@@ -86,8 +86,9 @@ const actionButtonStyles = `
 `;
 
 export const toDepartamentosGridRow = (departamentos: Departamentos, handlers: DepartamentosHandlers): DepartamentosGridRow => ({
-  id: departamentos.id,
-  direccion_id: departamentos.direccion_id,
+  // id: departamentos.id,
+  // direccion_id: departamentos.direccion_id,
+  direccion: departamentos?.direccion?.nombre??  '',
   nombre: departamentos.nombre,
   agregado_por: departamentos.agregado_por,
   agregado_en: departamentos.agregado_en,

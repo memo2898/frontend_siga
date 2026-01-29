@@ -13,7 +13,7 @@ import './components/DepartamentosForm.css';
 
 type ModalMode = 'create' | 'edit' | 'delete' | null;
 
-function Departamentos() {
+export function Departamentos() {
   const gridieRef = useRef<GridieRef>(null);
 
   const { departamentos, meta, loading, saving, paginated, fetch, create, update, remove, direccionesOptions } = useDepartamentos();
@@ -144,4 +144,4 @@ function Departamentos() {
   );
 }
 
-export default Departamentos;
+//export default Departamentos;

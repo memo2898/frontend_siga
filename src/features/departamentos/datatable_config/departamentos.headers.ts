@@ -1,15 +1,15 @@
 import type { GridieHeaderConfig } from '../../../lib/gridie-react';
 
 export const departamentosHeaders: GridieHeaderConfig[] = [
+  // {
+  //   label: 'Id',
+  //   type: 'number',
+  //   sortable: true,
+  //   width: '80px',
+  // },
   {
-    label: 'Id',
-    type: 'number',
-    sortable: true,
-    width: '80px',
-  },
-  {
-    label: 'Direccion Id',
-    type: 'number',
+    label: 'Direccion',
+    type: 'string',
     sortable: true,
     filters: {
       filterRow: { visible: true },

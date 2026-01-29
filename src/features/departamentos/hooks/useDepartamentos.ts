@@ -22,6 +22,7 @@ const getErrorMessage = (error: unknown): string => {
 };
 
 export function useDepartamentos(options: UseDepartamentosOptions = {}) {
+
   const { paginated = false, defaultLimit = 10 } = options;
 
   const [departamentos, setDepartamentos] = useState<Departamentos[]>([]);
@@ -39,10 +40,12 @@ export function useDepartamentos(options: UseDepartamentosOptions = {}) {
   useEffect(() => {
     const fetchRelatedOptions = async () => {
       try {
+
         const direccionesData = await direccionesService.getAll();
+
         const direccionesOpts = direccionesData.map((item: any) => ({
           value: Number(item.id),
-          label: String(item.sede_id || item.nombre || `ID: ${item.id}`)
+          label: String(item.nombre)
         }));
         setDireccionesOptions(direccionesOpts);
         console.log('✅ Opciones de Direcciones cargadas:', direccionesOpts.length);
