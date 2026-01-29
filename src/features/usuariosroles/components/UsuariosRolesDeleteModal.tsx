@@ -20,10 +20,10 @@ export function UsuariosRolesDeleteModal({ isOpen, usuariosRoles, loading, onCon
       size="sm"
       footer={
         <>
-          <button onClick={onCancel} disabled={loading} className="btn-secondary">
+          <button onClick={onCancel} disabled={loading} className="btn btn-secondary">
             Cancelar
           </button>
-          <button onClick={onConfirm} disabled={loading} className="btn-danger">
+          <button onClick={onConfirm} disabled={loading} className="btn btn-danger">
             {loading ? 'Eliminando...' : 'Eliminar'}
           </button>
         </>

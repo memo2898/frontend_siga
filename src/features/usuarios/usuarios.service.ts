@@ -25,7 +25,7 @@ export const getById = async (id: number) => {
 };
 
 export const create = async (data: UsuariosCreateDTO) => {
-  console.log('vamo a crear')
+
   //VOLVER EL USERNAME MIN?
   const payload = {
     ...data,
@@ -106,3 +106,12 @@ export const checkEmailAvaibility = async(email:string) =>{
     const data = responsePaginated.data
     return data.length === 1? true :false
 }
+
+
+export const cambiarPassword = async (id: number, nuevaPassword: string) => {
+  const payload = {
+    password_hash: nuevaPassword,
+    actualizado_en: new Date().toISOString(),
+  };
+  return await http.patch<Usuarios>(`${BASE}/${id}`, payload);
+};

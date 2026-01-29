@@ -3,6 +3,7 @@ import type { Usuarios, UsuariosGridRow } from '../usuarios.types';
 export interface UsuariosHandlers {
   onEdit: (usuarios: Usuarios) => void;
   onDelete: (usuarios: Usuarios) => void;
+  onChangePassword: (usuarios: Usuarios) => void;
 }
 
 // Estilos inline para los botones de acción
@@ -55,6 +56,21 @@ const actionButtonStyles = `
 
     .btn-edit:active {
       background: #bfdbfe;
+    }
+
+    .btn-change-password {
+      color: #7c3aed;
+      border-color: #ede9fe;
+      background: #f5f3ff;
+    }
+
+    .btn-change-password:hover {
+      background: #ede9fe;
+      border-color: #ddd6fe;
+    }
+
+    .btn-change-password:active {
+      background: #ddd6fe;
     }
 
     .btn-delete {
@@ -117,6 +133,19 @@ export const toUsuariosGridRow = (usuarios: Usuarios, handlers: UsuariosHandlers
       `,
       event: 'click',
       funct: () => handlers.onEdit(usuarios),
+    },
+    {
+      content: `
+        <button class="btn-action btn-change-password" title="Cambiar Contraseña">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+          <span>Cambiar Pass</span>
+        </button>
+      `,
+      event: 'click',
+      funct: () => handlers.onChangePassword(usuarios),
     },
     {
       content: `

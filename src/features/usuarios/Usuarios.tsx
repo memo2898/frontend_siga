@@ -10,13 +10,25 @@ import { usuariosHeaders } from './datatable_config/usuarios.headers';
 import { toUsuariosGridRows } from './datatable_config/usuarios.body';
 import type { Usuarios, UsuariosGridRow, UsuariosCreateDTO } from './usuarios.types';
 import './components/UsuariosForm.css';
+import { UsuariosCambiarPass } from './components/UsuariosCambiarPassModal';
 
-type ModalMode = 'create' | 'edit' | 'delete' | null;
+type ModalMode = 'create' | 'edit' | 'delete' | 'cambiar_pass' | null;
 
 export function Usuarios() {
   const gridieRef = useRef<GridieRef>(null);
 
-  const { usuarios, meta, loading, saving, paginated, fetch, create, update, remove } = useUsuarios();
+  const { 
+    usuarios, 
+    meta, 
+    loading, 
+    saving, 
+    paginated, 
+    fetch, 
+    create, 
+    update, 
+    remove,
+    cambiarPassword 
+  } = useUsuarios();
 
   const [modalMode, setModalMode] = useState<ModalMode>(null);
   const [selectedUsuarios, setSelectedUsuarios] = useState<Usuarios | null>(null);
@@ -41,6 +53,11 @@ export function Usuarios() {
     setModalMode('delete');
   };
 
+  const openChangePassword = (usuarios: Usuarios) => {
+    setSelectedUsuarios(usuarios);
+    setModalMode('cambiar_pass');
+  };
+
   const closeModal = () => {
     setModalMode(null);
     setSelectedUsuarios(null);
@@ -61,6 +78,12 @@ export function Usuarios() {
     if (success) closeModal();
   };
 
+  const handleCambiarPassword = async (nuevaPassword: string) => {
+    if (!selectedUsuarios) return;
+    const success = await cambiarPassword(selectedUsuarios.id, nuevaPassword);
+    if (success) closeModal();
+  };
+
   // ========== GRID ==========
   const handlePageChange = (event: GridiePageChangeEvent) => {
     if (paginated) {
@@ -71,14 +94,15 @@ export function Usuarios() {
   const gridRows: UsuariosGridRow[] = toUsuariosGridRows(usuarios, {
     onEdit: openEdit,
     onDelete: openDelete,
+    onChangePassword: openChangePassword,
   });
 
   // ========== RENDER ==========
   return (
-    <div style={ { padding: 20 } }>
+    <div style={{ padding: 20 }}>
       {/* Header */}
-      <div style={ { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 } }>
-        <h1 style={ { margin: 0 } }>Usuarios</h1>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+        <h1 style={{ margin: 0 }}>Usuarios</h1>
         <button onClick={openCreate} className="btn btn-success">
           + Nuevo Usuarios
         </button>
@@ -89,29 +113,29 @@ export function Usuarios() {
 
       {/* Grid */}
       <div className='gridie-containers'>
-      <GridieReact<UsuariosGridRow>
-        ref={gridieRef}
-        id="usuarios-table"
-        identityField="id"
-        headers={ usuariosHeaders }
-        body={gridRows}
-        enableSort={true}
-        enableFilter={true}
-        language="es"
-        paging={ {
-          enabled: true,
-          pageSize: { visible: true, default: 10, options: [10, 25, 50, 100] },
-          showInfo: true,
-          navigation: { visible: true, showPrevNext: true, showFirstLast: true, maxButtons: 5 },
-          position: 'bottom',
-        } }
-        onPageChange={handlePageChange}
-      />
+        <GridieReact<UsuariosGridRow>
+          ref={gridieRef}
+          id="usuarios-table"
+          identityField="id"
+          headers={usuariosHeaders}
+          body={gridRows}
+          enableSort={true}
+          enableFilter={true}
+          language="es"
+          paging={{
+            enabled: true,
+            pageSize: { visible: true, default: 10, options: [10, 25, 50, 100] },
+            showInfo: true,
+            navigation: { visible: true, showPrevNext: true, showFirstLast: true, maxButtons: 5 },
+            position: 'bottom',
+          }}
+          onPageChange={handlePageChange}
+        />
       </div>
 
       {/* Meta */}
       {paginated && meta && (
-        <p style={ { marginTop: 10, color: '#6b7280', fontSize: 14 } }>
+        <p style={{ marginTop: 10, color: '#6b7280', fontSize: 14 }}>
           Total: {meta.total} | Página {meta.page} de {meta.totalPages}
         </p>
       )}
@@ -124,8 +148,8 @@ export function Usuarios() {
         size="md"
       >
         <UsuariosForm
-          key={ selectedUsuarios?.id ?? 'new' }
-          initialData={ selectedUsuarios }
+          key={selectedUsuarios?.id ?? 'new'}
+          initialData={selectedUsuarios}
           onSubmit={handleSubmit}
           onCancel={closeModal}
           loading={saving}
@@ -135,13 +159,20 @@ export function Usuarios() {
       {/* Modal Eliminar */}
       <UsuariosDeleteModal
         isOpen={modalMode === 'delete'}
-        usuarios={ selectedUsuarios }
+        usuarios={selectedUsuarios}
         loading={saving}
         onConfirm={handleDelete}
+        onCancel={closeModal}
+      />
+
+      {/* Modal Cambiar Contraseña */}
+      <UsuariosCambiarPass
+        isOpen={modalMode === 'cambiar_pass'}
+        usuarios={selectedUsuarios}
+        loading={saving}
+        onConfirm={handleCambiarPassword}
         onCancel={closeModal}
       />
     </div>
   );
 }
-
-

@@ -102,6 +102,24 @@ export function useUsuarios(options: UseUsuariosOptions = {}) {
     }
   };
 
+
+  const cambiarPassword = async (id: number, nuevaPassword: string): Promise<boolean> => {
+  setSaving(true);
+  try {
+    await usuariosService.cambiarPassword(id, nuevaPassword);
+    toastx.success('Contraseña actualizada correctamente');
+    await fetch();
+    return true;
+  } catch (error) {
+    console.error('Error cambiando contraseña:', error);
+    toastx.error(getErrorMessage(error));
+    return false;
+  } finally {
+    setSaving(false);
+  }
+};
+
+
   return {
     usuarios,
     meta,
@@ -114,5 +132,6 @@ export function useUsuarios(options: UseUsuariosOptions = {}) {
     create,
     update,
     remove,
+    cambiarPassword
   };
 }
