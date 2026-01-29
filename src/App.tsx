@@ -4,6 +4,8 @@ import Login from "./pages/login/Login";
 import NotFound from "./pages/404/NotFound";
 
 import SidebarWrapper from './core/components/sidebar/SidebarWrapper';
+import Lobby from './pages/lobby/Lobby';
+import SedesPage from './pages/organizacion/sedes/SedesPage';
 
 const App = () => {
   return (
@@ -11,19 +13,20 @@ const App = () => {
       {/* Rutas públicas */}
       <Route path="/" element={<Login />} />
       <Route path="/login" element={<Login />} />
+      <Route path="/lobby" element={<Lobby/>} /> {/* Elegirems el perfil con el que se logueará el usuario */}
 
       {/* Rutas con Sidebar */}
       <Route element={<SidebarWrapper />}>
 
         <Route path="/dashboard" element={<h1>Dashboard</h1>} />
-        <Route path="/datasets" element={<h1>Inventario General</h1>} />
-        <Route path="/activos-fijos" element={<h1>Activos Fijos</h1>} />
-        <Route path="/equipos" element={<h1>Equipos</h1>} />
-        <Route path="/usuarios" element={<h1>Usuarios</h1>} />
-        <Route path="/roles" element={<h1>Roles y Permisos</h1>} />
-        <Route path="/reportes" element={<h1>Reportes</h1>} />
-        <Route path="/configuracion" element={<h1>Configuración</h1>} />
-        <Route path="/mi-perfil" element={<h1>Mi Perfil</h1>} />
+       
+       {/* PAGINAS DE ORGANIZACION START */}
+          <Route path="organizacion/sedes" element={<SedesPage/>} />
+          <Route path="organizacion/direcciones" element={<SedesPage/>} />
+          <Route path="organizacion/departamentos" element={<SedesPage/>} />
+       {/* PAGINAS DE ORGANIZACION END */}
+
+
       </Route>
 
       {/* 404 */}
