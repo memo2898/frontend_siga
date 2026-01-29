@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect } from 'react';
 import { toastx } from '../../../lib/uiX/components/ToastX';
 import * as usuariosRolesService from '../usuariosroles.service';
 import type { UsuariosRoles, UsuariosRolesCreateDTO, UsuariosRolesUpdateDTO, PaginatedMeta } from '../usuariosroles.types';
-import * as usuariosService from '../../usuarios/usuarios.service';
+import * as usuariosService from '../../usuarios_/usuarios.service';
 import * as rolesService from '../../roles/roles.service';
 
 interface UseUsuariosRolesOptions {

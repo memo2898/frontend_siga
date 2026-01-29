@@ -14,7 +14,7 @@
 }
 
 .form-error-message::before {
-  content: '⚠️';
+  content: '';
   font-size: 18px;
 }
 

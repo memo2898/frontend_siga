@@ -4,7 +4,7 @@ import * as transaccionesService from '../transacciones.service';
 import type { Transacciones, TransaccionesCreateDTO, TransaccionesUpdateDTO, PaginatedMeta } from '../transacciones.types';
 import * as modulosService from '../../modulos/modulos.service';
 import * as personasService from '../../personas/personas.service';
-import * as usuariosService from '../../usuarios/usuarios.service';
+import * as usuariosService from '../../usuarios_/usuarios.service';
 import * as rolesService from '../../roles/roles.service';
 
 interface UseTransaccionesOptions {

@@ -1,3 +1,5 @@
+/* core/components/sidebar/SidebarWrapper.css */
+
 /* Layout principal de la aplicación */
 .app-layout {
   display: flex;
@@ -8,24 +10,15 @@
 /* Contenido principal */
 .main-content {
   flex: 1;
-  margin-left: 280px; /* Mismo ancho que --sidebar-width */
   padding: 2rem;
   background-color: #f8fafc;
   min-height: 100vh;
-  transition: margin-left 0.3s ease;
-}
-
-/* Responsive: Tablet */
-@media (max-width: 1199px) {
-  .main-content {
-    margin-left: 0;
-  }
+  overflow-x: hidden;
 }
 
 /* Responsive: Móvil */
 @media (max-width: 768px) {
   .main-content {
-    margin-left: 0;
     padding: 1rem;
   }
 }

@@ -1,12 +1,12 @@
 import type { GridieHeaderConfig } from '../../../lib/gridie-react';
 
 export const direccionesHeaders: GridieHeaderConfig[] = [
-  {
-    label: 'Id',
-    type: 'number',
-    sortable: true,
-    width: '80px',
-  },
+  // {
+  //   label: 'Id',
+  //   type: 'number',
+  //   sortable: true,
+  //   width: '80px',
+  // },
   // {
   //   label: 'Sede Id',
   //   type: 'number',

@@ -13,10 +13,10 @@ import './components/UsuariosForm.css';
 
 type ModalMode = 'create' | 'edit' | 'delete' | null;
 
-function Usuarios() {
+export function Usuarios() {
   const gridieRef = useRef<GridieRef>(null);
 
-  const { usuarios, meta, loading, saving, paginated, fetch, create, update, remove, departamentosOptions } = useUsuarios();
+  const { usuarios, meta, loading, saving, paginated, fetch, create, update, remove } = useUsuarios();
 
   const [modalMode, setModalMode] = useState<ModalMode>(null);
   const [selectedUsuarios, setSelectedUsuarios] = useState<Usuarios | null>(null);
@@ -88,6 +88,7 @@ function Usuarios() {
       {loading && <p>Cargando...</p>}
 
       {/* Grid */}
+      <div className='gridie-containers'>
       <GridieReact<UsuariosGridRow>
         ref={gridieRef}
         id="usuarios-table"
@@ -106,6 +107,7 @@ function Usuarios() {
         } }
         onPageChange={handlePageChange}
       />
+      </div>
 
       {/* Meta */}
       {paginated && meta && (
@@ -127,8 +129,6 @@ function Usuarios() {
           onSubmit={handleSubmit}
           onCancel={closeModal}
           loading={saving}
-          // Opciones para foreign keys
-          departamentosOptions={ departamentosOptions }
         />
       </ModalX>
 
@@ -144,4 +144,4 @@ function Usuarios() {
   );
 }
 
-export default Usuarios;
+

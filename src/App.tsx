@@ -8,6 +8,7 @@ import Lobby from './pages/lobby/Lobby';
 import SedesPage from './pages/organizacion/sedes/SedesPage';
 import DireccionesPage from './pages/organizacion/direcciones/DireccionesPage';
 import DepartamentosPage from './pages/organizacion/departamentos/DepartamentosPage';
+import UsuariosPage from './pages/usuarios/UsuariosPage';
 
 const App = () => {
   return (
@@ -27,6 +28,10 @@ const App = () => {
           <Route path="organizacion/direcciones" element={<DireccionesPage/>} />
           <Route path="organizacion/departamentos" element={<DepartamentosPage/>} />
        {/* PAGINAS DE ORGANIZACION END */}
+
+     
+     
+          <Route path="usuarios" element={<UsuariosPage/>} />
 
 
       </Route>

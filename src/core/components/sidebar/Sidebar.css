@@ -61,17 +61,13 @@
 
 /* ===== SIDEBAR ===== */
 .sidebar {
-  position: fixed;
-  top: 0;
-  left: 0;
   width: var(--sidebar-width);
-  height: 100vh;
+  min-height: 100vh;
   background: var(--sidebar-bg);
   color: var(--sidebar-text);
   overflow-y: auto;
   overflow-x: hidden;
   transition: transform var(--transition-speed) ease;
-  z-index: 1000;
   display: flex;
   flex-direction: column;
   box-shadow: 2px 0 15px rgba(0, 0, 0, 0.1);
@@ -335,9 +331,14 @@
 /* Mobile (< 768px) */
 @media (max-width: 768px) {
   .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
     transform: translateX(-100%);
     width: 100%;
     max-width: 320px;
+    z-index: 1000;
   }
 
   .sidebar.active {
@@ -353,7 +354,12 @@
 /* Tablet (768px - 1199px) */
 @media (min-width: 769px) and (max-width: 1199px) {
   .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
     transform: translateX(-100%);
+    z-index: 1000;
   }
 
   .sidebar.active {
@@ -364,6 +370,7 @@
 /* Desktop (>= 1200px) */
 @media (min-width: 1200px) {
   .sidebar {
+    position: static;
     transform: translateX(0);
   }
 

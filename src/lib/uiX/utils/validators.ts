@@ -4,7 +4,7 @@
 // uiX - Validation Utilities
 // ============================================
 
-import { type ValidationRule, type FieldValidationResult } from "../types";
+import { type ValidationRule, type FieldValidationResult, type CustomValidatorFunction } from "../types";
 
 // Default messages in Spanish
 const DEFAULT_MESSAGES: Record<string, string> = {
@@ -17,6 +17,7 @@ const DEFAULT_MESSAGES: Record<string, string> = {
   pattern: "Formato inválido",
   url: "Ingrese una URL válida",
   phone: "Ingrese un teléfono válido",
+  custom: "Validación fallida", // 🆕 ADDED
 };
 
 // Email regex pattern
@@ -41,10 +42,11 @@ function getDefaultMessage(type: string, value?: string | number): string {
  */
 function validateRule(
   value: any,
-  rule: ValidationRule
+  rule: ValidationRule,
 ): { isValid: boolean; error?: string } {
   const stringValue = String(value ?? "");
-  const message = rule.message || getDefaultMessage(rule.type, rule.value as string | number);
+  const message =
+    rule.message || getDefaultMessage(rule.type, rule.value as string | number);
 
   switch (rule.type) {
     case "required":
@@ -86,9 +88,10 @@ function validateRule(
       break;
 
     case "pattern":
-      const regex = rule.value instanceof RegExp 
-        ? rule.value 
-        : new RegExp(rule.value as string);
+      const regex =
+        rule.value instanceof RegExp
+          ? rule.value
+          : new RegExp(rule.value as string);
       if (stringValue && !regex.test(stringValue)) {
         return { isValid: false, error: message };
       }
@@ -105,6 +108,23 @@ function validateRule(
         return { isValid: false, error: message };
       }
       break;
+
+    // 🆕 NEW CASE: Custom Validation
+    case "custom":
+      if (typeof rule.value === "function") {
+        const validatorFn = rule.value as CustomValidatorFunction;
+        const result = validatorFn(stringValue);
+
+        if (result === false) {
+          // If returns false, use the default message
+          return { isValid: false, error: message };
+        } else if (typeof result === "string") {
+          // If returns string, it's the error message
+          return { isValid: false, error: result };
+        }
+        // If returns true, validation passed
+      }
+      break;
   }
 
   return { isValid: true };
@@ -116,7 +136,7 @@ function validateRule(
 export function validateField(
   name: string,
   value: any,
-  rules: ValidationRule[]
+  rules: ValidationRule[],
 ): FieldValidationResult {
   const errors: string[] = [];
 

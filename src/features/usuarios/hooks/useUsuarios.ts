@@ -2,7 +2,6 @@ import { useState, useCallback, useEffect } from 'react';
 import { toastx } from '../../../lib/uiX/components/ToastX';
 import * as usuariosService from '../usuarios.service';
 import type { Usuarios, UsuariosCreateDTO, UsuariosUpdateDTO, PaginatedMeta } from '../usuarios.types';
-import * as departamentosService from '../../departamentos/departamentos.service';
 
 interface UseUsuariosOptions {
   paginated?: boolean;
@@ -32,28 +31,6 @@ export function useUsuarios(options: UseUsuariosOptions = {}) {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(defaultLimit);
 
-  // Estados para opciones de foreign keys
-  const [departamentosOptions, setDepartamentosOptions] = useState<Array<{ value: number; label: string }>>([]);
-
-  // Cargar opciones de foreign keys al montar
-  useEffect(() => {
-    const fetchRelatedOptions = async () => {
-      try {
-        const departamentosData = await departamentosService.getAll();
-        const departamentosOpts = departamentosData.map((item: any) => ({
-          value: Number(item.id),
-          label: String(item.direccion_id || item.nombre || `ID: ${item.id}`)
-        }));
-        setDepartamentosOptions(departamentosOpts);
-        console.log('✅ Opciones de Departamentos cargadas:', departamentosOpts.length);
-      } catch (error) {
-        console.error('❌ Error cargando opciones de Departamentos:', error);
-        toastx.error('Error al cargar opciones de Departamentos');
-      }
-    };
-
-    fetchRelatedOptions();
-  }, []);
 
   const fetch = useCallback(async (newPage = page, newLimit = limit) => {
     setLoading(true);
@@ -137,7 +114,5 @@ export function useUsuarios(options: UseUsuariosOptions = {}) {
     create,
     update,
     remove,
-    // Opciones de foreign keys
-    departamentosOptions,
   };
 }

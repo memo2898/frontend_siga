@@ -25,12 +25,18 @@ export const getById = async (id: number) => {
 };
 
 export const create = async (data: UsuariosCreateDTO) => {
+  console.log('vamo a crear')
+  //VOLVER EL USERNAME MIN?
   const payload = {
     ...data,
+    password_hash:'ADN1234',
     estado: 'ACTIVO',
     agregado_en: new Date().toISOString(),
   };
-  return await http.post<Usuarios>(BASE, payload);
+
+  const response = await http.post<Usuarios>(BASE, payload);
+  console.log(response)
+  return response
 };
 
 export const update = async (id: number, data: UsuariosUpdateDTO) => {
@@ -82,3 +88,21 @@ const buildQuery = (params: object) => {
   });
   return query.toString();
 };
+
+
+export const checkUserNameAvaibility = async(username:string) =>{
+  const filter: UsuariosFilters = {
+    username:username
+  }
+    const responsePaginated = await getPaginated(filter)
+    const data = responsePaginated.data
+    return data.length === 1? true :false
+}
+export const checkEmailAvaibility = async(email:string) =>{
+  const filter: UsuariosFilters = {
+    email:email
+  }
+    const responsePaginated = await getPaginated(filter)
+    const data = responsePaginated.data
+    return data.length === 1? true :false
+}

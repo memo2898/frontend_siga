@@ -41,7 +41,7 @@ export function UsuariosDeleteModal({ isOpen, usuarios, loading, onConfirm, onCa
         <strong>{ usuarios.nombre }</strong>
         <br />
         <span style={ { color: '#6b7280', fontSize: 14 } }>
-          { usuarios.email }
+          { usuarios.apellido }
         </span>
       </div>
       <p style={ { marginTop: 16, color: '#ef4444', fontSize: 14 } }>

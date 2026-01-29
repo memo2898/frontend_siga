@@ -1,14 +1,30 @@
 import type { GridieHeaderConfig } from '../../../lib/gridie-react';
 
 export const usuariosHeaders: GridieHeaderConfig[] = [
-  {
-    label: 'Id',
-    type: 'number',
-    sortable: true,
-    width: '80px',
-  },
+  // {
+  //   label: 'Id',
+  //   type: 'number',
+  //   sortable: true,
+  //   width: '80px',
+  // },
   {
     label: 'Nombre',
+    type: 'string',
+    sortable: true,
+    filters: {
+      filterRow: { visible: true },
+    },
+  },
+  {
+    label: 'Apellido',
+    type: 'string',
+    sortable: true,
+    filters: {
+      filterRow: { visible: true },
+    },
+  },
+  {
+    label: 'Username',
     type: 'string',
     sortable: true,
     filters: {
@@ -19,15 +35,43 @@ export const usuariosHeaders: GridieHeaderConfig[] = [
     label: 'Email',
     type: 'string',
     sortable: true,
+    filters: {
+      filterRow: { visible: true },
+    },
   },
   {
-    label: 'Password',
+    label: 'Password Hash',
     type: 'string',
     sortable: true,
   },
   {
-    label: 'Departamento Id',
+    label: 'Avatar Url',
+    type: 'string',
+    sortable: true,
+  },
+  {
+    label: 'Ultimo Acceso',
+    type: 'string',
+    sortable: true,
+  },
+  {
+    label: 'Intentos Fallidos',
     type: 'number',
+    sortable: true,
+  },
+  {
+    label: 'Bloqueado Hasta',
+    type: 'string',
+    sortable: true,
+  },
+  {
+    label: 'Debe Cambiar Password',
+    type: 'boolean',
+    sortable: true,
+  },
+  {
+    label: 'Fecha Ultimo Cambio Password',
+    type: 'string',
     sortable: true,
   },
   {

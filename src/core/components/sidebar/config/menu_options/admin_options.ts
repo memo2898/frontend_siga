@@ -11,19 +11,7 @@ export const ADMIN_OPTIONS = [
     href: '/dashboard'
   },
 
-  // ============================================
-  // GESTIÓN ORGANIZACIONAL
-  // ============================================
-  {
-    id: 'organizacion',
-    icon: 'fas fa-building',
-    text: 'Organización',
-    submenu: [
-      { text: 'Sedes', href: '/organizacion/sedes', icon: 'fas fa-map-marker-alt' },
-      { text: 'Direcciones', href: '/organizacion/direcciones', icon: 'fas fa-sitemap' },
-      { text: 'Departamentos', href: '/organizacion/departamentos', icon: 'fas fa-users-cog' },
-    ]
-  },
+ 
 
   // ============================================
   // GESTIÓN DE PERSONAS
@@ -135,6 +123,24 @@ export const ADMIN_OPTIONS = [
     href: '/templates'
   },
 
+
+
+
+   // ============================================
+  // GESTIÓN ORGANIZACIONAL
+  // ============================================
+  {
+    id: 'organizacion',
+    icon: 'fas fa-building',
+    text: 'Organización',
+    submenu: [
+      { text: 'Sedes', href: '/organizacion/sedes', icon: 'fas fa-map-marker-alt' },
+      { text: 'Direcciones', href: '/organizacion/direcciones', icon: 'fas fa-sitemap' },
+      { text: 'Departamentos', href: '/organizacion/departamentos', icon: 'fas fa-users-cog' },
+    ]
+  },
+
+  
   // ============================================
   // USUARIOS Y SEGURIDAD
   // ============================================

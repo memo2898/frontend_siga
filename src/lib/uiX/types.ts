@@ -3,7 +3,10 @@
 // uiX - Core Types
 // ============================================
 
-// Validation types
+// Validation function type for custom validations
+export type CustomValidatorFunction = (value: string) => boolean | string;
+
+// Validation types - EXTENDED
 export type ValidationType = 
   | "required"
   | "email"
@@ -13,11 +16,12 @@ export type ValidationType =
   | "max"
   | "pattern"
   | "url"
-  | "phone";
+  | "phone"
+  | "custom"; // 🆕 ADDED
 
 export interface ValidationRule {
   type: ValidationType;
-  value?: string | number | RegExp;
+  value?: string | number | RegExp | CustomValidatorFunction; // 🆕 EXTENDED
   message?: string;
 }
 

@@ -108,7 +108,7 @@ export function CategoriasForm({ initialData, onSubmit, onCancel, loading }: Cat
       {/* Mensaje de error - solo aparece después de submit fallido */}
       {showError && (
         <div className="form-error-message">
-          <span>⚠️</span>
+          <span></span>
           <span>Por favor, corrija los errores marcados antes de continuar.</span>
         </div>
       )}

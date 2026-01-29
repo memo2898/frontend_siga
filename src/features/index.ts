@@ -4,7 +4,7 @@
  */
 
 export * from './auth';
-export * from './usuarios';
+export * from './usuarios_';
 export * from './direcciones/Direcciones';
 export * from './sedes';
 export * from './departamentos';

@@ -86,11 +86,18 @@ const actionButtonStyles = `
 `;
 
 export const toUsuariosGridRow = (usuarios: Usuarios, handlers: UsuariosHandlers): UsuariosGridRow => ({
-  id: usuarios.id,
+  // id: usuarios.id,
   nombre: usuarios.nombre,
+  apellido: usuarios.apellido,
+  username: usuarios.username,
   email: usuarios.email,
-  password: usuarios.password,
-  departamento_id: usuarios.departamento_id,
+  password_hash: usuarios.password_hash,
+  avatar_url: usuarios.avatar_url,
+  ultimo_acceso: usuarios.ultimo_acceso,
+  intentos_fallidos: usuarios.intentos_fallidos,
+  bloqueado_hasta: usuarios.bloqueado_hasta,
+  debe_cambiar_password: usuarios.debe_cambiar_password,
+  fecha_ultimo_cambio_password: usuarios.fecha_ultimo_cambio_password,
   agregado_por: usuarios.agregado_por,
   agregado_en: usuarios.agregado_en,
   actualizado_por: usuarios.actualizado_por,
