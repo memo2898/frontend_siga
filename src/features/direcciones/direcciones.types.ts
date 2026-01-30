@@ -1,5 +1,6 @@
 import { type Sedes } from "../sedes/sedes.types";
 export interface Direcciones {
+     identityField?:string;
   id?: number;
   sede_id?: number;
   nombre?: string;
@@ -12,6 +13,7 @@ export interface Direcciones {
 }
 
 export interface DireccionesGridRow {
+  identityField?:string;
   id?: number;
   sede_id?: number;
   nombre?: string;

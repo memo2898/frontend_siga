@@ -47,7 +47,7 @@ export function useModulosCategorias(options: UseModulosCategoriasOptions = {}) 
           label: String(item.nombre || item.nombre || `ID: ${item.id}`)
         }));
         setModulosOptions(modulosOpts);
-        console.log('✅ Opciones de Modulos cargadas:', modulosOpts.length);
+        console.log('Opciones de Modulos cargadas:', modulosOpts.length);
       } catch (error) {
         console.error('❌ Error cargando opciones de Modulos:', error);
         toastx.error('Error al cargar opciones de Modulos');
@@ -59,7 +59,7 @@ export function useModulosCategorias(options: UseModulosCategoriasOptions = {}) 
           label: String(item.nombre || item.nombre || `ID: ${item.id}`)
         }));
         setCategoriasOptions(categoriasOpts);
-        console.log('✅ Opciones de Categorias cargadas:', categoriasOpts.length);
+        console.log('Opciones de Categorias cargadas:', categoriasOpts.length);
       } catch (error) {
         console.error('❌ Error cargando opciones de Categorias:', error);
         toastx.error('Error al cargar opciones de Categorias');

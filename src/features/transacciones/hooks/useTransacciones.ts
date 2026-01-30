@@ -51,7 +51,7 @@ export function useTransacciones(options: UseTransaccionesOptions = {}) {
           label: String(item.nombre || item.nombre || `ID: ${item.id}`)
         }));
         setModulosOptions(modulosOpts);
-        console.log('✅ Opciones de Modulos cargadas:', modulosOpts.length);
+        console.log('Opciones de Modulos cargadas:', modulosOpts.length);
       } catch (error) {
         console.error('❌ Error cargando opciones de Modulos:', error);
         toastx.error('Error al cargar opciones de Modulos');
@@ -63,7 +63,7 @@ export function useTransacciones(options: UseTransaccionesOptions = {}) {
           label: String(item.nombre || item.nombre || `ID: ${item.id}`)
         }));
         setPersonasOptions(personasOpts);
-        console.log('✅ Opciones de Personas cargadas:', personasOpts.length);
+        console.log('Opciones de Personas cargadas:', personasOpts.length);
       } catch (error) {
         console.error('❌ Error cargando opciones de Personas:', error);
         toastx.error('Error al cargar opciones de Personas');
@@ -75,7 +75,7 @@ export function useTransacciones(options: UseTransaccionesOptions = {}) {
           label: String(item.nombre || item.nombre || `ID: ${item.id}`)
         }));
         setUsuariosOptions(usuariosOpts);
-        console.log('✅ Opciones de Usuarios cargadas:', usuariosOpts.length);
+        console.log('Opciones de Usuarios cargadas:', usuariosOpts.length);
       } catch (error) {
         console.error('❌ Error cargando opciones de Usuarios:', error);
         toastx.error('Error al cargar opciones de Usuarios');
@@ -87,7 +87,7 @@ export function useTransacciones(options: UseTransaccionesOptions = {}) {
           label: String(item.nombre || item.nombre || `ID: ${item.id}`)
         }));
         setRolesOptions(rolesOpts);
-        console.log('✅ Opciones de Roles cargadas:', rolesOpts.length);
+        console.log('Opciones de Roles cargadas:', rolesOpts.length);
       } catch (error) {
         console.error('❌ Error cargando opciones de Roles:', error);
         toastx.error('Error al cargar opciones de Roles');

@@ -16,7 +16,7 @@ export const SimpleFieldForm: React.FC<SimpleFieldFormProps> = ({
   onCancel,
 }) => {
   const [label, setLabel] = useState("");
-  const [inputType, setInputType] = useState<"text" | "number" | "checkbox">("text");  // ✅ Variable de estado
+  const [inputType, setInputType] = useState<"text" | "number" | "checkbox">("text");  // Variable de estado
 
   const handleLabelChange = (value: string) => {
     setLabel(value);
@@ -34,8 +34,8 @@ export const SimpleFieldForm: React.FC<SimpleFieldFormProps> = ({
       id: generateId(),
       name,
       label,
-      input_type: inputType,  // ✅ Propiedad del objeto: input_type
-      value: inputType === "checkbox" ? false : "",  // ✅ Referencia a la variable: inputType
+      input_type: inputType,  // Propiedad del objeto: input_type
+      value: inputType === "checkbox" ? false : "",  // Referencia a la variable: inputType
     };
 
     onSave(newField);
@@ -71,8 +71,8 @@ export const SimpleFieldForm: React.FC<SimpleFieldFormProps> = ({
             <label className="field-form-label">Tipo</label>
             <select
               className="field-form-select"
-              value={inputType}  // ✅ Variable de estado
-              onChange={(e) => setInputType(e.target.value as "text" | "number" | "checkbox")}  // ✅ Setter
+              value={inputType}  // Variable de estado
+              onChange={(e) => setInputType(e.target.value as "text" | "number" | "checkbox")}  // Setter
             >
               {SIMPLE_TYPE_OPTIONS.map((opt) => (
                 <option key={opt.value} value={opt.value}>

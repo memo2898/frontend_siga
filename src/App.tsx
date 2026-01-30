@@ -9,6 +9,8 @@ import SedesPage from './pages/organizacion/sedes/SedesPage';
 import DireccionesPage from './pages/organizacion/direcciones/DireccionesPage';
 import DepartamentosPage from './pages/organizacion/departamentos/DepartamentosPage';
 import UsuariosPage from './pages/usuarios/UsuariosPage';
+import TemplatesPage from './pages/templates/TemplatesPage';
+
 
 const App = () => {
   return (
@@ -32,6 +34,7 @@ const App = () => {
      
      
           <Route path="usuarios" element={<UsuariosPage/>} />
+          <Route path="templates" element={<TemplatesPage/>} />
 
 
       </Route>

@@ -47,7 +47,7 @@ export function useTransaccionesActivos(options: UseTransaccionesActivosOptions 
           label: String(item.codigo || item.nombre || `ID: ${item.id}`)
         }));
         setTransaccionesOptions(transaccionesOpts);
-        console.log('✅ Opciones de Transacciones cargadas:', transaccionesOpts.length);
+        console.log('Opciones de Transacciones cargadas:', transaccionesOpts.length);
       } catch (error) {
         console.error('❌ Error cargando opciones de Transacciones:', error);
         toastx.error('Error al cargar opciones de Transacciones');
@@ -59,7 +59,7 @@ export function useTransaccionesActivos(options: UseTransaccionesActivosOptions 
           label: String(item.codigo_inventario_local || item.nombre || `ID: ${item.id}`)
         }));
         setActivosOptions(activosOpts);
-        console.log('✅ Opciones de Activos cargadas:', activosOpts.length);
+        console.log('Opciones de Activos cargadas:', activosOpts.length);
       } catch (error) {
         console.error('❌ Error cargando opciones de Activos:', error);
         toastx.error('Error al cargar opciones de Activos');

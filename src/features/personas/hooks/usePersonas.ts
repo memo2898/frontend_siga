@@ -45,7 +45,7 @@ export function usePersonas(options: UsePersonasOptions = {}) {
           label: String(item.direccion_id || item.nombre || `ID: ${item.id}`)
         }));
         setDepartamentosOptions(departamentosOpts);
-        console.log('✅ Opciones de Departamentos cargadas:', departamentosOpts.length);
+        console.log('Opciones de Departamentos cargadas:', departamentosOpts.length);
       } catch (error) {
         console.error('❌ Error cargando opciones de Departamentos:', error);
         toastx.error('Error al cargar opciones de Departamentos');

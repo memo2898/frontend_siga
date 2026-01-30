@@ -47,7 +47,7 @@ export function useActivos(options: UseActivosOptions = {}) {
           label: String(item.nombre || item.nombre || `ID: ${item.id}`)
         }));
         setCategoriasOptions(categoriasOpts);
-        console.log('✅ Opciones de Categorias cargadas:', categoriasOpts.length);
+        console.log('Opciones de Categorias cargadas:', categoriasOpts.length);
       } catch (error) {
         console.error('❌ Error cargando opciones de Categorias:', error);
         toastx.error('Error al cargar opciones de Categorias');
@@ -59,7 +59,7 @@ export function useActivos(options: UseActivosOptions = {}) {
           label: String(item.nombre || item.nombre || `ID: ${item.id}`)
         }));
         setAlmacenesOptions(almacenesOpts);
-        console.log('✅ Opciones de Almacenes cargadas:', almacenesOpts.length);
+        console.log('Opciones de Almacenes cargadas:', almacenesOpts.length);
       } catch (error) {
         console.error('❌ Error cargando opciones de Almacenes:', error);
         toastx.error('Error al cargar opciones de Almacenes');

@@ -176,7 +176,7 @@ constructor(config?: GridieConfig) {
       this._originalBody = [...config.body];
       this._filteredBody = [...config.body];
       
-      // ✅ CAMBIO: Si no se especifica identityField, usar "identityField" por defecto
+      // CAMBIO: Si no se especifica identityField, usar "identityField" por defecto
       this._identityField = config.identityField || 'identityField';
       
       this._config = {
@@ -200,7 +200,7 @@ constructor(config?: GridieConfig) {
         this.updatePagination();
       }
       
-      // ✅ CAMBIO: SIEMPRE construir el identity map
+      // CAMBIO: SIEMPRE construir el identity map
       this.buildIdentityMap();
     }
   } catch (error) {
@@ -316,19 +316,19 @@ private validateConfig(config: GridieConfig): void {
     }
   }
   
-  // ✅ MEJORADO: Validar identityField
+  // MEJORADO: Validar identityField
   if (config.identityField && config.body.length > 0) {
     const firstRow = config.body[0];
     if (typeof firstRow === 'object' && firstRow !== null && !Array.isArray(firstRow)) {
       if (!(config.identityField in firstRow)) {
         console.warn(
-          ` Gridie: El identityField "${config.identityField}" no existe en las filas del body.`,
+          `⚠️ Gridie: El identityField "${config.identityField}" no existe en las filas del body.`,
           `\nCampos disponibles:`, Object.keys(firstRow),
           `\nAsegúrate de que todas las filas tengan este campo.`
         );
       }
       
-      // ✅ NUEVO: Advertencia si identityField está en headers
+      // NUEVO: Advertencia si identityField está en headers
       const headerLabels = config.headers.map(h => 
         typeof h === 'string' ? h : h.label
       );
@@ -373,9 +373,9 @@ public debugIdentityField(): void {
   const duplicates = values.filter((val, index) => values.indexOf(val) !== index);
   
   if (duplicates.length > 0) {
-    console.warn("   Valores duplicados encontrados:", [...new Set(duplicates)]);
+    console.warn("  ⚠️ Valores duplicados encontrados:", [...new Set(duplicates)]);
   } else {
-    //console.log("  ✅ No hay valores duplicados");
+    //console.log("  No hay valores duplicados");
   }
 }
 /**
@@ -496,7 +496,7 @@ private renderErrorState(): void {
     </style>
     
     <div class="gridie-error-container">
-      <div class="gridie-error-icon"></div>
+      <div class="gridie-error-icon">⚠️</div>
       <h3 class="gridie-error-title">Error al cargar la tabla</h3>
       <p class="gridie-error-message">${this._errorMessage}</p>
       <button class="gridie-error-btn" onclick="location.reload()">
@@ -526,36 +526,33 @@ private hideLoadingOverlay(): void {
  * @private
  */
 private buildIdentityMap(): void {
-  // ✅ CAMBIO: Si no hay _identityField configurado, usar "identityField" por defecto
   const fieldName = this._identityField || 'identityField';
   
   this._identityMap.clear();
   
   this._originalBody.forEach((row, index) => {
-    // Validar que sea un objeto
     if (typeof row !== 'object' || row === null || Array.isArray(row)) {
-      console.warn(` Gridie: La fila en índice ${index} no es un objeto. identityField solo funciona con objetos.`);
+      console.warn(`⚠️ Gridie: La fila en índice ${index} no es un objeto.`);
       return;
     }
     
     const identityValue = row[fieldName];
     
-    // Validar que el campo exista
     if (identityValue === undefined || identityValue === null) {
-      console.warn(` Gridie: La fila en índice ${index} no tiene el campo "${fieldName}".`);
+      console.warn(`⚠️ Gridie: La fila en índice ${index} no tiene el campo "${fieldName}".`);
       return;
     }
     
-    // Detectar duplicados (warn + usar el primero)
     if (this._identityMap.has(identityValue)) {
-      console.warn(` Gridie: Valor duplicado "${identityValue}" encontrado en campo "${fieldName}". Se usará la primera ocurrencia.`);
+      console.warn(`⚠️ Gridie: Valor duplicado "${identityValue}".`);
       return;
     }
     
+    // CRÍTICO: Guardar la referencia EXACTA del objeto
     this._identityMap.set(identityValue, row);
   });
   
- // console.log(`🗂️ Identity map construido: ${this._identityMap.size} registros únicos (campo: "${fieldName}")`);
+ // console.log(`🗂️ Identity map: ${this._identityMap.size} registros (campo: "${fieldName}")`);
 }
 
 /**
@@ -573,23 +570,50 @@ private getVisibleBodyKeys(row: any): string[] {
   
   const allKeys = Object.keys(row);
   
-  // ✅ CAMBIO: Excluir SIEMPRE el campo llamado "identityField"
-  // Ya no importa el valor de this._identityField
-  return allKeys.filter(key => key !== 'identityField');
+  // Filtrar el identityField
+  return allKeys.filter(key => {
+    if (this._identityField && key === this._identityField) {
+      return false;
+    }
+    return true;
+  });
 }
 
+
+
+/**
+ * Obtiene los headers visibles (excluye el header del identityField si existe)
+ * @private
+ */
+private getVisibleHeaders(): GridieHeaderConfig[] {
+  // SIMPLE: Si no hay identityField, retornar todos
+  if (!this._identityField) {
+    return this.headers;
+  }
+
+  // Si hay identityField, verificar que NO haya un header para él
+  // (El usuario debe asegurarse de esto manualmente)
+  return this.headers;
+}
 /**
  * Obtiene el valor de una celda excluyendo identityField
  * @private
  */
 private getCellValueByPositionFiltered(row: any, position: number): any {
+  if (Array.isArray(row)) {
+    return row[position];
+  }
+  
+  // Obtener solo las keys VISIBLES (sin identityField)
   const visibleKeys = this.getVisibleBodyKeys(row);
   
   if (position < 0 || position >= visibleKeys.length) {
     return undefined;
   }
   
-  return row[visibleKeys[position]];
+  // Usar la key en la posición DENTRO de las visibles
+  const keyAtPosition = visibleKeys[position];
+  return row[keyAtPosition];
 }
 // ========== MÉTODOS PÚBLICOS DE IDENTITY ==========
 
@@ -601,18 +625,7 @@ private getCellValueByPositionFiltered(row: any, position: number): any {
  * const user = gridie.getRowByIdentity('u1');
  */
 public getRowByIdentity(value: any): any | undefined {
-  if (!this._identityField) {
-    console.error('❌ Gridie.getRowByIdentity: identityField no está configurado');
-    return undefined;
-  }
-  
-  const row = this._identityMap.get(value);
-  
-  if (!row) {
-    console.warn(` Gridie.getRowByIdentity: No se encontró fila con ${this._identityField} = "${value}"`);
-  }
-  
-  return row;
+  return this._identityMap.get(value);
 }
 
 /**
@@ -640,23 +653,17 @@ public hasRowByIdentity(value: any): boolean {
  * gridie.updateRowByIdentity('u1', { edad: 26 });
  */
 public updateRowByIdentity(value: any, data: Partial<any>): boolean {
-  if (!this._identityField) {
-    console.error('❌ Gridie.updateRowByIdentity: identityField no está configurado');
-    return false;
-  }
-  
   const row = this._identityMap.get(value);
   
   if (!row) {
-    console.warn(` Gridie.updateRowByIdentity: No se encontró fila con ${this._identityField} = "${value}"`);
+    console.warn(`⚠️ No se encontró fila con identity = "${value}"`);
     return false;
   }
   
-  // Buscar índice en _originalBody
   const index = this._originalBody.indexOf(row);
   
   if (index === -1) {
-    console.error('❌ Gridie.updateRowByIdentity: Inconsistencia interna - fila en map pero no en body');
+    console.error('❌ Inconsistencia interna');
     return false;
   }
   
@@ -666,13 +673,20 @@ public updateRowByIdentity(value: any, data: Partial<any>): boolean {
     ...data
   };
   
-  // Reconstruir map (por si cambió el identity value)
-  this.buildIdentityMap();
+  // Preservar el __identity__
+  const identityValue = (row as any).__identity__;
+  if (identityValue !== undefined) {
+    Object.defineProperty(this._originalBody[index], '__identity__', {
+      value: identityValue,
+      enumerable: false,
+      writable: false,
+      configurable: true
+    });
+  }
   
-  // Re-aplicar filtros y sorting
+  this.buildIdentityMap();
   this.applyFiltersAndSorting();
   
-  //console.log(`✅ Gridie.updateRowByIdentity: Fila actualizada (${this._identityField} = "${value}")`);
   return true;
 }
 
@@ -692,7 +706,7 @@ public removeRowByIdentity(value: any): boolean {
   const row = this._identityMap.get(value);
   
   if (!row) {
-    console.warn(` Gridie.removeRowByIdentity: No se encontró fila con ${this._identityField} = "${value}"`);
+    console.warn(`⚠️ Gridie.removeRowByIdentity: No se encontró fila con ${this._identityField} = "${value}"`);
     return false;
   }
   
@@ -736,7 +750,7 @@ connectedCallback() {
     );
     
     if (!scrollElement) {
-      console.warn(' No se encontró elemento con scroll horizontal');
+     // console.warn('⚠️ No se encontró elemento con scroll horizontal');
       return;
     }
     
@@ -776,14 +790,14 @@ connectedCallback() {
     (this as any)._scrollHandler = handleScroll;
     (this as any)._scrollElement = scrollElement;
     
-    //console.log('✅ Listener de scroll adjuntado correctamente');
+    //console.log('Listener de scroll adjuntado correctamente');
   }, 100); // ← Pequeño delay para asegurar que el DOM esté listo
 }
 
 // disconnectedCallback() {
 //   document.removeEventListener("click", this.handleDocumentClick.bind(this));
   
-//   // ✅ Remover listener de scroll
+//   // Remover listener de scroll
 //   const container = this.shadow.querySelector('.gridie-container') as HTMLElement;
 //   if (container && (this as any)._scrollHandler) {
 //     container.removeEventListener('scroll', (this as any)._scrollHandler);
@@ -799,7 +813,7 @@ connectedCallback() {
 disconnectedCallback() {
   document.removeEventListener("click", this.handleDocumentClick.bind(this));
   
-  // ✅ Remover listener de scroll
+  // Remover listener de scroll
   const container = this.shadow.querySelector('.gridie-container') as HTMLElement;
   if (container && (this as any)._scrollHandler) {
     container.removeEventListener('scroll', (this as any)._scrollHandler);
@@ -849,7 +863,7 @@ public setConfig(config: GridieConfig) {
   this._language = config.language || "es";
   this._lang = getLanguage(this._language);
   
-  // ✅ NUEVO: Actualizar identityField
+  // NUEVO: Actualizar identityField
   this._identityField = config.identityField;
   
   this._config = {
@@ -876,7 +890,7 @@ public setConfig(config: GridieConfig) {
     this.updatePagination();
   }
   
-  // ✅ NUEVO: Reconstruir identity map
+  // NUEVO: Reconstruir identity map
   if (this._identityField) {
     this.buildIdentityMap();
   }
@@ -902,7 +916,7 @@ public destroy(): void {
     this._headerFilterSelections.clear();
     this._headerFilterExpandedState.clear();
     
-    // ✅ NUEVO: Limpiar identity map
+    // NUEVO: Limpiar identity map
     this._identityMap.clear();
     
     this._sortingManager.clearAll();
@@ -939,7 +953,7 @@ public setBody(data: any[]): void {
     this.updatePagination();
   }
   
-  // ✅ NUEVO: Reconstruir identity map
+  // NUEVO: Reconstruir identity map
   if (this._identityField) {
     this.buildIdentityMap();
   }
@@ -970,7 +984,7 @@ public setData(config: { headers: (string | GridieHeaderConfig)[]; data: any[] }
     this.updatePagination();
   }
   
-  // ✅ NUEVO: Reconstruir identity map
+  // NUEVO: Reconstruir identity map
   if (this._identityField) {
     this.buildIdentityMap();
   }
@@ -984,7 +998,7 @@ public setData(config: { headers: (string | GridieHeaderConfig)[]; data: any[] }
  * @returns true si se agregó exitosamente, false si fue rechazada
  */
 public addRow(row: any): boolean {
-  // ✅ VALIDACIÓN: Si hay identityField configurado, validar unicidad
+  // VALIDACIÓN: Si hay identityField configurado, validar unicidad
   if (this._identityField) {
     // Validar que sea un objeto
     if (typeof row !== 'object' || row === null || Array.isArray(row)) {
@@ -1000,7 +1014,7 @@ public addRow(row: any): boolean {
       return false;
     }
     
-    //  Verificar duplicados
+    // ⚠️ Verificar duplicados
     if (this._identityMap.has(identityValue)) {
       console.error(`❌ Gridie.addRow: Ya existe una fila con ${this._identityField} = "${identityValue}". Operación rechazada.`);
       return false;
@@ -1018,7 +1032,7 @@ public addRow(row: any): boolean {
   // Re-aplicar filtros y sorting
   this.applyFiltersAndSorting();
   
-  // console.log(`✅ Gridie.addRow: Fila agregada exitosamente`);
+  // console.log(`Gridie.addRow: Fila agregada exitosamente`);
   return true;
 }
 
@@ -1065,7 +1079,7 @@ public addRow(row: any): boolean {
   }
 
 get body(): any[] {
-  // ✅ CAMBIO: Siempre retornar _body (sin paginación aquí)
+  // CAMBIO: Siempre retornar _body (sin paginación aquí)
   // La paginación se aplica en updatePagination() -> _pagedBody
   return this._body.length > 0 ? this._body : [];
 }
@@ -1123,7 +1137,7 @@ private normalizeHeader(
   header: string | GridieHeaderConfig,
   position: number
 ): GridieHeaderConfig {
-  // ✅ CASO 1: Header como string simple
+  // CASO 1: Header como string simple
   if (typeof header === "string") {
     return {
       label: header,
@@ -1139,9 +1153,9 @@ private normalizeHeader(
     };
   }
 
-  // ✅ CASO 2: Header como objeto GridieHeaderConfig
+  // CASO 2: Header como objeto GridieHeaderConfig
   
-  // ✅ CRÍTICO: Solo normalizar filters SI EXISTEN
+  // CRÍTICO: Solo normalizar filters SI EXISTEN
   let normalizedFilters: GridieFiltersConfig | undefined = undefined;
   
   if (header.filters) {
@@ -1172,7 +1186,7 @@ private normalizeHeader(
     }
   }
 
-  // ✅ RETORNAR con la estructura correcta
+  // RETORNAR con la estructura correcta
   return {
     label: header.label || `Column ${position + 1}`,
     sortable: header.sortable ?? this._config.enableSort ?? true,
@@ -1188,7 +1202,7 @@ private normalizeHeader(
     return row[position];
   }
   
-  // ✅ CAMBIO: Obtener solo valores visibles
+  // CAMBIO: Obtener solo valores visibles
   const visibleKeys = this.getVisibleBodyKeys(row);
   
   if (position < 0 || position >= visibleKeys.length) {
@@ -1289,27 +1303,25 @@ private normalizeHeader(
 private renderCell(
   row: any,
   header: GridieHeaderConfig,
-  position: number,
+  headerIndex: number, // Este es el índice del header VISIBLE
   rowIndex: number
 ): string {
-  const cellValue = this.getCellValueByPositionFiltered(row, position);
+  // Calcular el índice real en el body considerando headers visibles
+  const cellValue = this.getCellValueForHeader(row, header, headerIndex);
 
-  // ✅ CASO 1: Array de acciones (con eventos)
+  // CASO 1: Array de acciones (con eventos)
   if (this.isActionCell(cellValue)) {
     return cellValue
       .map((action, actionIndex) => {
-        const actionId = `action-${rowIndex}-${position}-${actionIndex}`;
+        const actionId = `action-${rowIndex}-${headerIndex}-${actionIndex}`;
         
-        // Extraer HTML del content
         let htmlContent: string;
         if (typeof action.content === 'string') {
           htmlContent = action.content;
         } else if (action.content && typeof action.content === 'object') {
-          // Recuperación defensiva
           htmlContent = (action.content as any).html || 
                        (action.content as any).text || 
                        String(action.content);
-          console.warn(' action.content debería ser string:', action.content);
         } else {
           htmlContent = String(action.content || '');
         }
@@ -1320,15 +1332,45 @@ private renderCell(
       .join(" ");
   }
 
-  // ✅ CASO 2: HTML directo (string que parece HTML)
+  // CASO 2: HTML directo
   if (typeof cellValue === 'string' && this.looksLikeHTML(cellValue)) {
-    return cellValue; // Renderizar HTML tal cual
+    return cellValue;
   }
 
-  // ✅ CASO 3: Valor normal (formatear según tipo)
+  // CASO 3: Valor normal
   return this.formatCellValue(cellValue, header);
 }
 
+/**
+ * Obtiene el valor de la celda para un header específico
+ * Salta el identityField automáticamente
+ */
+private getCellValueForHeader(row: any, header: GridieHeaderConfig, headerIndex: number): any {
+  if (Array.isArray(row)) {
+    return row[headerIndex];
+  }
+  
+  if (typeof row !== 'object' || row === null) {
+    return undefined;
+  }
+  
+  const allKeys = Object.keys(row);
+  
+  // Si hay identityField, encontrar su posición
+  let identityFieldIndex = -1;
+  if (this._identityField) {
+    identityFieldIndex = allKeys.indexOf(this._identityField);
+  }
+  
+  // Calcular el índice real saltando el identityField
+  let realIndex = headerIndex;
+  if (identityFieldIndex !== -1 && headerIndex >= identityFieldIndex) {
+    realIndex = headerIndex + 1; // Saltar el identityField
+  }
+  
+  const keyAtPosition = allKeys[realIndex];
+  return row[keyAtPosition];
+}
 
 /**
  * Detecta si un string contiene HTML
@@ -1359,7 +1401,7 @@ public goToPage(page: number): void {
   this._currentPage = page;
   this.updatePagination();
   
-  // ✅ NUEVO: Actualizar solo tabla y footer (no re-renderizar todo)
+  // NUEVO: Actualizar solo tabla y footer (no re-renderizar todo)
   this.renderTableBody();
   this.updatePaginationFooter();
   
@@ -1432,7 +1474,7 @@ public setPageSize(size: number): void {
   this.updatePagination();
   this.updateTableContent();
   
-  // ✅ CRÍTICO: Actualizar footer después de cambiar pageSize
+  // CRÍTICO: Actualizar footer después de cambiar pageSize
   this.updatePaginationFooter();
   
   // Emitir evento
@@ -1574,7 +1616,7 @@ private showContextMenu(x: number, y: number, columnIndex: number): void {
   const menu = document.createElement("div");
   menu.className = "gridie-context-menu";
 
-  // ✅ SOLUCIÓN: Usar position: absolute respecto al container
+  // SOLUCIÓN: Usar position: absolute respecto al container
   const containerRect = container.getBoundingClientRect();
   
   // Convertir coordenadas del viewport a coordenadas del container
@@ -1633,7 +1675,7 @@ private showContextMenu(x: number, y: number, columnIndex: number): void {
   container.appendChild(menu);
   this._contextMenu = menu;
 
-  // ✅ Ajustar si se sale del contenedor
+  // Ajustar si se sale del contenedor
   requestAnimationFrame(() => {
     const menuRect = menu.getBoundingClientRect();
     const containerRect = container.getBoundingClientRect();
@@ -1706,12 +1748,12 @@ private updatePagination(): void {
     return;
   }
 
-  // ✅ CORRECCIÓN: Calcular totales basándose en _body (que ya está filtrado)
+  // CORRECCIÓN: Calcular totales basándose en _body (que ya está filtrado)
   // _body ya contiene los datos filtrados después de applyFiltersAndSorting()
   this._totalItems = this._body.length;
   this._totalPages = Math.ceil(this._totalItems / this._pageSize) || 1;
 
-  // ✅ NUEVO: Si la página actual excede el total después del filtro, ir a la última página
+  // NUEVO: Si la página actual excede el total después del filtro, ir a la última página
   if (this._currentPage > this._totalPages) {
     this._currentPage = this._totalPages;
   }
@@ -1740,19 +1782,19 @@ private updatePagination(): void {
 // ============================================================================
 
 private applyFiltersAndSorting(): void {
-  // 1. ✅ Aplicar TODOS los filtros (FilterRow + HeaderFilter) usando FilteringManager
+  // 1. Aplicar TODOS los filtros (FilterRow + HeaderFilter) usando FilteringManager
   let filtered = this._filteringManager.applyFilters(
     this._originalBody,
     this.headers
   );
 
-  // 2. ✅ Aplicar filtros adicionales de _headerFilterSelections si existen
+  // 2. Aplicar filtros adicionales de _headerFilterSelections si existen
   if (this._headerFilterSelections && this._headerFilterSelections.size > 0) {
     filtered = filtered.filter((row: any) => {
       for (const [colIndex, selections] of this._headerFilterSelections.entries()) {
         if (selections.size === 0) continue;
 
-        // ✅ Usar getCellValueByPositionFiltered
+        // Usar getCellValueByPositionFiltered
         const cellValue = this.getCellValueByPositionFiltered(row, colIndex);
         const header = this.headers[colIndex];
 
@@ -2085,13 +2127,12 @@ private evaluateParameterFilter(
   }
 
 private updateTableContent(): void {
-  //  AGREGAR STACK TRACE:
- // console.trace("📊 updateTableContent llamado desde:");
-  //console.log("📊 Filas a renderizar:", this.body.length);
-  
   const thead = this.shadow.querySelector("thead tr:first-child");
+  
+  // USAR HEADERS VISIBLES
+  const headers = this.getVisibleHeaders();
+  
   if (thead) {
-    const headers = this.headers;
     thead.innerHTML = headers
       .map(
         (header, index) => `
@@ -2115,7 +2156,6 @@ private updateTableContent(): void {
 
   </div>
 </th>
-
     `
       )
       .join("");
@@ -2127,16 +2167,17 @@ private updateTableContent(): void {
   this.renderTableBody();
 }
 
- private renderTableBody(): void {
+private renderTableBody(): void {
   const tbody = this.shadow.querySelector("tbody");
   if (!tbody) {
     this.render();
     return;
   }
 
-  const headers = this.headers;
+  // USAR HEADERS VISIBLES en lugar de this.headers
+  const headers = this.getVisibleHeaders();
   
-  // ✅ CAMBIO CRÍTICO: Usar _pagedBody si paginación está activa
+  // CAMBIO CRÍTICO: Usar _pagedBody si paginación está activa
   const body = this._config.paging?.enabled && this._config.mode === "client"
     ? this._pagedBody
     : this._body;
@@ -2372,7 +2413,7 @@ private openOperatorDropdown(columnIndex: number): void {
     trigger.classList.add("active");
     menu.classList.add("active");
     
-    // ✅ SOLO ajustar si se sale del viewport (sin tocar left/top)
+    // SOLO ajustar si se sale del viewport (sin tocar left/top)
     requestAnimationFrame(() => {
       const menuRect = menu.getBoundingClientRect();
       const viewportWidth = window.innerWidth;
@@ -2638,7 +2679,7 @@ private openOperatorDropdown(columnIndex: number): void {
   const values = new Set<any>();
 
   this._originalBody.forEach((row) => {
-    // ✅ CORRECCIÓN: Usar getCellValueByPositionFiltered
+    // CORRECCIÓN: Usar getCellValueByPositionFiltered
     const cellValue = this.getCellValueByPositionFiltered(row, columnIndex);
     if (cellValue !== null && cellValue !== undefined) {
       values.add(cellValue);
@@ -2692,7 +2733,7 @@ private openOperatorDropdown(columnIndex: number): void {
   const header = this.headers[columnIndex];
 
   this._originalBody.forEach((row) => {
-    // ✅ CORRECCIÓN: Usar getCellValueByPositionFiltered
+    // CORRECCIÓN: Usar getCellValueByPositionFiltered
     const cellValue = this.getCellValueByPositionFiltered(row, columnIndex);
 
     // Crear un FilterState temporal para evaluar
@@ -2737,7 +2778,7 @@ private openOperatorDropdown(columnIndex: number): void {
   let count = 0;
 
   this._originalBody.forEach((row) => {
-    // ✅ CORRECCIÓN: Usar getCellValueByPositionFiltered
+    // CORRECCIÓN: Usar getCellValueByPositionFiltered
     const cellValue = this.getCellValueByPositionFiltered(row, columnIndex);
     if (cellValue === value || String(cellValue) === String(value)) {
       count++;
@@ -2785,7 +2826,7 @@ private generateDateHierarchy(
 
   const options: any[] = [];
 
-  // ✅ CORRECCIÓN: Usar getCellValueByPositionFiltered en countRowsForYear
+  // CORRECCIÓN: Usar getCellValueByPositionFiltered en countRowsForYear
   const countRowsForYear = (year: number): number => {
     return this._originalBody.filter((row: any) => {
       const cellValue = this.getCellValueByPositionFiltered(row, columnIndex);
@@ -2795,7 +2836,7 @@ private generateDateHierarchy(
     }).length;
   };
 
-  // ✅ CORRECCIÓN: Usar getCellValueByPositionFiltered en countRowsForMonth
+  // CORRECCIÓN: Usar getCellValueByPositionFiltered en countRowsForMonth
   const countRowsForMonth = (year: number, month: number): number => {
     return this._originalBody.filter((row: any) => {
       const cellValue = this.getCellValueByPositionFiltered(row, columnIndex);
@@ -2809,7 +2850,7 @@ private generateDateHierarchy(
     }).length;
   };
 
-  // ✅ CORRECCIÓN: Usar getCellValueByPositionFiltered en countRowsForDay
+  // CORRECCIÓN: Usar getCellValueByPositionFiltered en countRowsForDay
   const countRowsForDay = (
     year: number,
     month: number,
@@ -2828,7 +2869,7 @@ private generateDateHierarchy(
     }).length;
   };
 
-  // ✅ CORRECCIÓN: Usar getCellValueByPositionFiltered en countRowsForHour
+  // CORRECCIÓN: Usar getCellValueByPositionFiltered en countRowsForHour
   const countRowsForHour = (
     year: number,
     month: number,
@@ -3026,7 +3067,7 @@ private generateDateHierarchy(
                 const hourDates = hourGroups.get(hour)!;
                 const timeFormat = config.timeFormat || "24h";
 
-                // ✅ CORRECCIÓN: Usar getCellValueByPositionFiltered en matchingRow
+                // CORRECCIÓN: Usar getCellValueByPositionFiltered en matchingRow
                 const matchingRow = this._originalBody.find((row: any) => {
                   const cellValue = this.getCellValueByPositionFiltered(
                     row,
@@ -3043,7 +3084,7 @@ private generateDateHierarchy(
                   );
                 });
 
-                // ✅ CORRECCIÓN: Usar getCellValueByPositionFiltered para obtener valueToUse
+                // CORRECCIÓN: Usar getCellValueByPositionFiltered para obtener valueToUse
                 const valueToUse = matchingRow
                   ? this.getCellValueByPositionFiltered(matchingRow, columnIndex)
                   : hourDates[0].toISOString();
@@ -3291,7 +3332,7 @@ private generateDateHierarchy(
   menu.className = "header-filter-menu";
   menu.dataset.columnIndex = String(columnIndex);
 
-  // ✅ CAMBIO: position: absolute (se mueve con scroll vertical)
+  // CAMBIO: position: absolute (se mueve con scroll vertical)
   const containerRect = container.getBoundingClientRect();
   const iconRect = icon.getBoundingClientRect();
   
@@ -3418,7 +3459,7 @@ private generateDateHierarchy(
   this._headerFilterMenu = menu;
   container.appendChild(menu);
 
-  // ✅ Ajustar si se sale del viewport
+  // Ajustar si se sale del viewport
   requestAnimationFrame(() => {
     const menuRect = menu.getBoundingClientRect();
     const containerRect = container.getBoundingClientRect();
@@ -3903,7 +3944,7 @@ private handleHeaderFilterOptionClick(
     return hasFilter;
   });
   
-  // console.log(`   ✅ Total con filterRow visible:`, headersWithFilterRow.length);
+  // console.log(`   Total con filterRow visible:`, headersWithFilterRow.length);
   // console.log(`   Headers con filterRow:`, headersWithFilterRow.map(h => h.label));
   // console.log("🔍 ========== hasFilterRow END ==========");
   
@@ -3955,7 +3996,7 @@ private handleHeaderFilterOptionClick(
  * @returns Array de operadores válidos
  */
 private getOperatorsForColumn(header: GridieHeaderConfig): FilterOperator[] {
-  // ✅ PASO 1: Intentar usar operadores personalizados
+  // PASO 1: Intentar usar operadores personalizados
   if (header.filters?.filterRow?.operators) {
     const customOps = header.filters.filterRow.operators;
     
@@ -3965,10 +4006,10 @@ private getOperatorsForColumn(header: GridieHeaderConfig): FilterOperator[] {
       return [...customOps]; // Retornar copia
     }
     
-    console.warn(` Operadores personalizados inválidos para "${header.label}", usando defaults`);
+    console.warn(`⚠️ Operadores personalizados inválidos para "${header.label}", usando defaults`);
   }
 
-  // ✅ PASO 2: Usar operadores por defecto según tipo
+  // PASO 2: Usar operadores por defecto según tipo
   const defaultOps = this.getDefaultOperators(header.type || "string");
   //console.log(`📋 Usando operadores por defecto para "${header.label}" (${header.type}):`, defaultOps);
   
@@ -4063,54 +4104,27 @@ private getOperatorsForColumn(header: GridieHeaderConfig): FilterOperator[] {
   // `;
   // }
 
-  private renderFilterRow(): string {
-  // console.log("🔍 ========== renderFilterRow DEBUG ==========");
-  
+private renderFilterRow(): string {
   if (!this.hasFilterRow()) {
-    console.log("   ❌ hasFilterRow() retornó false");
     return "";
   }
 
-  const headers = this.headers;
-  // console.log("   📋 Headers normalizados:", headers.map(h => ({
-  //   label: h.label,
-  //   filterRow: h.filters?.filterRow,
-  //   operators: h.filters?.filterRow?.operators
-  // })));
+  // USAR HEADERS VISIBLES
+  const headers = this.getVisibleHeaders();
 
-  
-  if (!this.hasFilterRow()) {
-    //console.log("   ❌ Retornando vacío (hasFilterRow = false)");
-    return "";
-  }
-
-  //console.log("   Headers a procesar:", headers.length);
-
-  const filterRowHTML = `
+  return `
     <tr class="filter-row">
       ${headers
         .map((header, index) => {
-          // console.log(`   📋 Procesando header ${index} (${header.label}):`, {
-          //   visible: header.filters?.filterRow?.visible,
-          //   hasFilters: !!header.filters,
-          //   hasFilterRow: !!header.filters?.filterRow
-          // });
-
           if (!header.filters?.filterRow?.visible) {
-            //console.log(`       ${header.label}: filterRow NO visible`);
             return `<td></td>`;
           }
-
-          //console.log(`      ✅ ${header.label}: filterRow SÍ visible`);
 
           const operators = this.getOperatorsForColumn(header);
           const currentFilter = this._filteringManager.getColumnFilter(index);
           const currentOperator = this.getCurrentOperator(index);
           const currentValue = currentFilter?.value || "";
           const currentValue2 = currentFilter?.value2 || "";
-
-          //console.log(`      Operadores:`, operators);
-          //console.log(`      Current operator:`, currentOperator);
 
           // Layout especial para "between"
           if (currentOperator === "between") {
@@ -4150,12 +4164,6 @@ private getOperatorsForColumn(header: GridieHeaderConfig): FilterOperator[] {
         .join("")}
     </tr>
   `;
-
-  //console.log("   📏 HTML generado (longitud):", filterRowHTML.length);
-  //console.log("   📄 HTML preview:", filterRowHTML.substring(0, 200) + "...");
-  //console.log("🔍 ========== renderFilterRow END ==========");
-
-  return filterRowHTML;
 }
 private renderOperatorDropdown(
   columnIndex: number,
@@ -4171,7 +4179,7 @@ private renderOperatorDropdown(
         <span class="filter-operator-icon">${getFilterIcon(currentOperator)}</span>
       </div>
       
-      <!-- ✅ Menú INLINE (no creado con document.createElement) -->
+      <!-- Menú INLINE (no creado con document.createElement) -->
       <div class="filter-operator-menu ${isActive ? "active" : ""}" 
            data-column-index="${columnIndex}">
         ${operators.map(op => `
@@ -4313,7 +4321,7 @@ private handleFilterChange(
     }
   }
 
-  //  ✅ Resetear a página 1 al filtrar
+  //  Resetear a página 1 al filtrar
   if (this._config.paging?.enabled) {
     this._currentPage = 1;
   }
@@ -4489,12 +4497,12 @@ private renderPageSizeSelector(): string {
  * Renderiza la información de registros (Mostrando X-Y de Z)
  */
 private renderPaginationInfo(): string {
-  // ✅ PROTECCIÓN: Si no hay config de paging o lang, retornar vacío
+  // PROTECCIÓN: Si no hay config de paging o lang, retornar vacío
   if (!this._config.paging?.showInfo) return '';
   
-  // ✅ PROTECCIÓN: Si no hay idioma configurado, usar valores por defecto
+  // PROTECCIÓN: Si no hay idioma configurado, usar valores por defecto
   if (!this._lang || !this._lang.paging) {
-    console.warn(" Idioma de paginación no configurado, usando valores por defecto");
+    console.warn("⚠️ Idioma de paginación no configurado, usando valores por defecto");
     
     if (this._totalItems === 0) {
       return `
@@ -4517,7 +4525,7 @@ private renderPaginationInfo(): string {
     `;
   }
   
-  // ✅ CÓDIGO ORIGINAL (cuando el idioma está bien configurado)
+  // CÓDIGO ORIGINAL (cuando el idioma está bien configurado)
   if (this._totalItems === 0) {
     return `
       <div class="pagination-center">
@@ -4556,7 +4564,7 @@ private renderNavigationButtons(): string {
   
   const pageButtons = this.calculatePageButtons();
   
-  // ✅ PROTECCIÓN: Valores por defecto si no hay idioma
+  // PROTECCIÓN: Valores por defecto si no hay idioma
   const labels = {
     first: this._lang?.paging?.first || 'Primera',
     previous: this._lang?.paging?.previous || 'Anterior',
@@ -4649,7 +4657,7 @@ private renderJumpToControl(): string {
   
   const buttonText = config.buttonText || '→';
   
-  // ✅ PROTECCIÓN: Valores por defecto si no hay idioma
+  // PROTECCIÓN: Valores por defecto si no hay idioma
   const jumpToLabel = this._lang?.paging?.jumpTo || 'Ir a';
   const pageLabel = this._lang?.paging?.page || 'Página';
   
@@ -4792,21 +4800,14 @@ private handleJumpTo(footer: Element): void {
   input.value = ''; // Limpiar input
 }
 
- render() {
-
-   if (this._hasError) {
+render() {
+  if (this._hasError) {
     this.renderErrorState();
     return;
   }
 
-  //   console.log("🎨 ========== RENDER START ==========");
-  // console.log("Headers:", this.headers);
-  // console.log("hasFilterRow():", this.hasFilterRow());
-  // console.log("Filter row HTML length:", this.renderFilterRow().length);
-
-
-
-  const headers = this.headers;
+  // USAR HEADERS VISIBLES
+  const headers = this.getVisibleHeaders();
   const body = this._config.paging?.enabled && this._config.mode === "client"
     ? this._pagedBody
     : this._body;
@@ -4815,13 +4816,13 @@ private handleJumpTo(footer: Element): void {
   this._eventHandlers.clear();
 
   this.shadow.innerHTML = `
-    <style>
+      <style>
       ${gridieStyles}
       ${filterRowStyles}
       ${paginationStyles}
 
 
-      /* ✅ MENÚS CON POSITION FIXED */
+      /* MENÚS CON POSITION FIXED */
 .gridie-context-menu,
 .header-filter-menu {
   position: fixed;
@@ -4961,7 +4962,7 @@ private handleJumpTo(footer: Element): void {
 
 
       
-/* ✅ CONTENEDOR: Contexto de posicionamiento */
+/* CONTENEDOR: Contexto de posicionamiento */
 .gridie-container {
   position: relative;
   width: 100%;
@@ -4970,7 +4971,7 @@ private handleJumpTo(footer: Element): void {
   font-family: Arial, sans-serif;
 }
 
-/* ✅ WRAPPER DE LA TABLA */
+/* WRAPPER DE LA TABLA */
 .gridie-table-wrapper {
   position: relative;
   overflow-x: auto;
@@ -4978,7 +4979,7 @@ private handleJumpTo(footer: Element): void {
   width: 100%;
 }
 
-/* ✅ MENÚS: Todos posicionados absolute dentro del container */
+/* MENÚS: Todos posicionados absolute dentro del container */
 .gridie-context-menu,
 .header-filter-menu {
   position: absolute;
@@ -4990,7 +4991,7 @@ private handleJumpTo(footer: Element): void {
   max-width: 90vw; /* No más ancho que la ventana */
 }
 
-/* ✅ Header filter con max-height y scroll */
+/* Header filter con max-height y scroll */
 .header-filter-menu {
   max-height: min(400px, 70vh);
   overflow-y: auto;
@@ -4998,13 +4999,13 @@ private handleJumpTo(footer: Element): void {
   padding: 4px 0;
 }
 
-/* ✅ Context menu */
+/* Context menu */
 .gridie-context-menu {
   min-width: 180px;
   padding: 4px 0;
 }
 
-/* ✅ CRÍTICO: Evitar que el scroll del container afecte los menús */
+/* CRÍTICO: Evitar que el scroll del container afecte los menús */
 .gridie-container:has(.gridie-context-menu),
 .gridie-container:has(.header-filter-menu) {
   overflow: visible; /* Permitir que los menús salgan */
@@ -5040,7 +5041,7 @@ private handleJumpTo(footer: Element): void {
   margin: 4px 0;
 }
 
-      /* ✅ NUEVO: Estilos para scroll independiente */
+      /* NUEVO: Estilos para scroll independiente */
       .gridie-table-wrapper {
         overflow-x: auto;
         overflow-y: visible;
@@ -5339,7 +5340,6 @@ private handleJumpTo(footer: Element): void {
         align-items: center;
       }
     </style>
-
     <div class="gridie-container" data-gridie-id="${gridieId}">
     
       
@@ -5347,7 +5347,6 @@ private handleJumpTo(footer: Element): void {
         ? this.renderPaginationFooter() 
         : ''}
       
-      <!-- ✅ NUEVO: Wrapper con scroll solo para la tabla -->
       <div class="gridie-table-wrapper">
         <table class="gridie-table">
           <thead>
@@ -5375,7 +5374,6 @@ private handleJumpTo(footer: Element): void {
 
     </div>
   </th>
-
               `
                 )
                 .join("")}
@@ -5409,7 +5407,6 @@ private handleJumpTo(footer: Element): void {
           </tbody>
         </table>
       </div>
-      <!-- ✅ FIN del wrapper -->
       
       ${this._config.paging?.position === 'bottom' || this._config.paging?.position === 'both' 
         ? this.renderPaginationFooter() 
@@ -5422,8 +5419,6 @@ private handleJumpTo(footer: Element): void {
   this.attachFilterEvents();
   this.attachHeaderFilterEvents();
   this.attachPaginationEvents();
-
-
 }
 
 
@@ -5537,24 +5532,55 @@ private handleJumpTo(footer: Element): void {
     });
   }
 
-  private attachActionEvents(): void {
-    this._eventHandlers.forEach((action, actionId) => {
-      const element = this.shadow.querySelector(
-        `[data-action-id="${actionId}"]`
-      );
+ private attachActionEvents(): void {
+  this._eventHandlers.forEach((action, actionId) => {
+    const element = this.shadow.querySelector(
+      `[data-action-id="${actionId}"]`
+    );
 
-      if (element) {
-        const parts = actionId.split("-");
-        const rowIndex = parseInt(parts[1]);
-        const rowData = this.body[rowIndex];
+    if (element) {
+      const parts = actionId.split("-");
+      const rowIndex = parseInt(parts[1]);
+      
+      // Obtener la fila del body que está visible (pagedBody o body)
+      const currentBody = this._config.paging?.enabled && this._config.mode === "client"
+        ? this._pagedBody
+        : this._body;
+      
+      const rowData = currentBody[rowIndex];
 
-        element.addEventListener(action.event, (e) => {
-          e.stopPropagation();
-          action.funct(rowData, rowIndex);
-        });
+      if (!rowData) {
+        console.error('❌ No se encontró la fila en rowIndex:', rowIndex);
+        return;
       }
-    });
-  }
+
+      element.addEventListener(action.event, (e) => {
+        e.stopPropagation();
+        
+        // CRÍTICO: Si hay identityField, buscar la fila original
+        if (this._identityField && rowData[this._identityField]) {
+          const identityValue = rowData[this._identityField];
+          
+          // Buscar la fila ORIGINAL en _originalBody
+          const originalRow = this._originalBody.find(
+            r => r[this._identityField!] === identityValue
+          );
+          
+          if (originalRow) {
+            // Pasar la fila original (garantiza tener employeeId correcto)
+            action.funct(originalRow, rowIndex);
+            return;
+          }
+          
+          console.warn('⚠️ No se encontró fila original con identity:', identityValue);
+        }
+        
+        // Fallback: usar la fila del currentBody
+        action.funct(rowData, rowIndex);
+      });
+    }
+  });
+}
 }
 
 customElements.define("gridie-table", Gridie);

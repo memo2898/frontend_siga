@@ -21,11 +21,11 @@
 
 **uiX** es una librería de componentes React diseñada para simplificar la creación de formularios con:
 
-- ✅ **Validaciones declarativas** - Define reglas en un objeto simple
-- ✅ **Restricciones de input** - Controla qué puede escribir el usuario
-- ✅ **Formateo automático** - Transforma el valor mientras escribe
-- ✅ **Validación configurable** - Por form o por campo (`blur`, `change`, `submit`)
-- ✅ **Submit flexible** - Usa `data-submitx` en cualquier elemento o `ref.submit()` desde afuera
+- **Validaciones declarativas** - Define reglas en un objeto simple
+- **Restricciones de input** - Controla qué puede escribir el usuario
+- **Formateo automático** - Transforma el valor mientras escribe
+- **Validación configurable** - Por form o por campo (`blur`, `change`, `submit`)
+- **Submit flexible** - Usa `data-submitx` en cualquier elemento o `ref.submit()` desde afuera
 
 ---
 
@@ -51,12 +51,12 @@ uiX/
 ├── Example.tsx                 # Ejemplo de uso
 │
 ├── components/
-│   ├── FormX/                  # ✅ COMPLETADO
+│   ├── FormX/                  # COMPLETADO
 │   │   ├── FormX.tsx           # Componente principal
 │   │   ├── FormX.context.ts    # Context para comunicación con inputs
 │   │   └── index.ts
 │   │
-│   ├── InputX/                 # ✅ COMPLETADO
+│   ├── InputX/                 # COMPLETADO
 │   │   ├── InputX.tsx          # Input con validación
 │   │   ├── InputX.css          # Estilos
 │   │   └── index.ts
@@ -79,7 +79,7 @@ uiX/
 
 ---
 
-## ✅ Componentes Completados
+## Componentes Completados
 
 ### 1. FormX
 

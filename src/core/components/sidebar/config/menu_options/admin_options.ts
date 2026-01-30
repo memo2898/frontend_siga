@@ -96,22 +96,7 @@ export const ADMIN_OPTIONS = [
     ]
   },
 
-  // ============================================
-  // REPORTES Y ANÁLISIS
-  // ============================================
-  {
-    id: 'reportes',
-    icon: 'fas fa-chart-bar',
-    text: 'Reportes',
-    submenu: [
-      { text: 'Dashboard de Reportes', href: '/reportes', icon: 'fas fa-chart-line' },
-      { text: 'Stock por Categoría', href: '/reportes/stock-categoria', icon: 'fas fa-boxes' },
-      { text: 'Activos por Estado', href: '/reportes/activos-estado', icon: 'fas fa-info-circle' },
-      { text: 'Historial de Transacciones', href: '/reportes/historial', icon: 'fas fa-history' },
-      { text: 'Activos Descargados', href: '/reportes/descargados', icon: 'fas fa-trash-alt' },
-      { text: 'Préstamos Vencidos', href: '/reportes/prestamos-vencidos', icon: 'fas fa-exclamation-triangle' },
-    ]
-  },
+ 
 
   // ============================================
   // TEMPLATES Y DOCUMENTOS
@@ -151,28 +136,46 @@ export const ADMIN_OPTIONS = [
     submenu: [
       { text: 'Gestión de Usuarios', href: '/usuarios', icon: 'fas fa-users' },
       { text: 'Roles y Permisos', href: '/usuarios/roles', icon: 'fas fa-user-shield' },
-      { text: 'Auditoría', href: '/usuarios/auditoria', icon: 'fas fa-clipboard-list' },
+      // { text: 'Auditoría', href: '/usuarios/auditoria', icon: 'fas fa-clipboard-list' },
     ]
   },
 
   // ============================================
   // CONFIGURACIÓN DEL SISTEMA
   // ============================================
-  {
-    id: 'configuracion',
-    icon: 'fas fa-cog',
-    text: 'Configuración',
-    href: '/configuracion'
-  },
+  // {
+  //   id: 'configuracion',
+  //   icon: 'fas fa-cog',
+  //   text: 'Configuración',
+  //   href: '/configuracion'
+  // },
 
   // ============================================
   // NOTIFICACIONES
   // ============================================
+  // {
+  //   id: 'notificaciones',
+  //   icon: 'fas fa-bell',
+  //   text: 'Notificaciones',
+  //   href: '/notificaciones',
+  //   badge: 0
+  // }
+
+
+   // ============================================
+  // REPORTES Y ANÁLISIS
+  // ============================================
   {
-    id: 'notificaciones',
-    icon: 'fas fa-bell',
-    text: 'Notificaciones',
-    href: '/notificaciones',
-    badge: 0
-  }
+    id: 'reportes',
+    icon: 'fas fa-chart-bar',
+    text: 'Reportes',
+    submenu: [
+      { text: 'Dashboard de Reportes', href: '/reportes', icon: 'fas fa-chart-line' },
+      { text: 'Stock por Categoría', href: '/reportes/stock-categoria', icon: 'fas fa-boxes' },
+      { text: 'Activos por Estado', href: '/reportes/activos-estado', icon: 'fas fa-info-circle' },
+      { text: 'Historial de Transacciones', href: '/reportes/historial', icon: 'fas fa-history' },
+      { text: 'Activos Descargados', href: '/reportes/descargados', icon: 'fas fa-trash-alt' },
+      { text: 'Préstamos Vencidos', href: '/reportes/prestamos-vencidos', icon: 'fas fa-exclamation-triangle' },
+    ]
+  },
 ];

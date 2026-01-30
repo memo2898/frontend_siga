@@ -1,12 +1,12 @@
 import type { GridieHeaderConfig } from '../../../lib/gridie-react';
 
 export const templatesHeaders: GridieHeaderConfig[] = [
-  {
-    label: 'Id',
-    type: 'number',
-    sortable: true,
-    width: '80px',
-  },
+  // {
+  //   label: 'Id',
+  //   type: 'number',
+  //   sortable: true,
+  //   width: '80px',
+  // },
   {
     label: 'Nombre',
     type: 'string',
@@ -23,21 +23,21 @@ export const templatesHeaders: GridieHeaderConfig[] = [
       filterRow: { visible: true },
     },
   },
-  {
-    label: 'Tipo',
-    type: 'string',
-    sortable: true,
-  },
-  {
-    label: 'Contenido Hbs',
-    type: 'string',
-    sortable: true,
-  },
-  {
-    label: 'Variables Utilizadas',
-    type: 'string',
-    sortable: true,
-  },
+  // {
+  //   label: 'Tipo',
+  //   type: 'string',
+  //   sortable: true,
+  // },
+  // {
+  //   label: 'Contenido Hbs',
+  //   type: 'string',
+  //   sortable: true,
+  // },
+  // {
+  //   label: 'Variables Utilizadas',
+  //   type: 'string',
+  //   sortable: true,
+  // },
   {
     label: 'Agregado Por',
     type: 'number',

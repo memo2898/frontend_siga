@@ -133,7 +133,7 @@ export class FilteringManager {
     return row[columnIndex];
   }
   
-  // ✅ Excluir identityField
+  // Excluir identityField
   const keys = Object.keys(row).filter(key => key !== 'identityField');
   const key = keys[columnIndex];
   

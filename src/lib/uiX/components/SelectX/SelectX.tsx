@@ -26,7 +26,7 @@ export interface SelectXProps {
   label?: string;
   placeholder?: string;
   options: SelectXOption[];
-  defaultValue?: string | number | null; // ✅ NUEVO
+  defaultValue?: string | number | null; // NUEVO
   rules?: InputRules;
   validateOn?: ValidateOn;
   helperText?: string;
@@ -43,7 +43,7 @@ export const SelectX: React.FC<SelectXProps> = ({
   label,
   placeholder = "Seleccionar...",
   options,
-  defaultValue, // ✅ NUEVO
+  defaultValue, // NUEVO
   rules = {},
   validateOn: inputValidateOn,
   helperText,
@@ -56,7 +56,7 @@ export const SelectX: React.FC<SelectXProps> = ({
 }) => {
   const formContext = useFormXContext();
   
-  // ✅ Inicializar con defaultValue si existe
+  // Inicializar con defaultValue si existe
   const [searchText, setSearchText] = useState(() => {
     if (defaultValue !== undefined && defaultValue !== null) {
       const defaultOption = options.find(opt => opt.value === defaultValue);
@@ -83,7 +83,7 @@ export const SelectX: React.FC<SelectXProps> = ({
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // ✅ Sincronizar con defaultValue cuando cambia (para modo edición)
+  // Sincronizar con defaultValue cuando cambia (para modo edición)
   if (defaultValue !== prevDefaultValue) {
     if (defaultValue !== undefined && defaultValue !== null) {
       const defaultOption = options.find(opt => opt.value === defaultValue);

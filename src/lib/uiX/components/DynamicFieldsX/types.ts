@@ -50,7 +50,7 @@ export interface SimpleField {
   id: string;
   name: string;
   label: string;
-  input_type: "text" | "number" | "checkbox";  // ✅ input_type
+  input_type: "text" | "number" | "checkbox";  // input_type
   value: any;
 }
 // Contratos disponibles

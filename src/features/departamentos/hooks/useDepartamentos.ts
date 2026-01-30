@@ -48,7 +48,7 @@ export function useDepartamentos(options: UseDepartamentosOptions = {}) {
           label: String(item.nombre)
         }));
         setDireccionesOptions(direccionesOpts);
-        console.log('✅ Opciones de Direcciones cargadas:', direccionesOpts.length);
+        console.log('Opciones de Direcciones cargadas:', direccionesOpts.length);
       } catch (error) {
         console.error('❌ Error cargando opciones de Direcciones:', error);
         toastx.error('Error al cargar opciones de Direcciones');

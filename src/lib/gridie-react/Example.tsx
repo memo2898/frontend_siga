@@ -79,7 +79,7 @@ export function EmployeeTable() {
 
   // ========== HANDLERS ==========
 
-  // ✅ Usar useCallback para evitar recrear funciones innecesariamente
+  // Usar useCallback para evitar recrear funciones innecesariamente
   const handleView = useCallback((row: Employee) => {
     setSelectedEmployee(row);
     alert(`Ver empleado: ${row.fullName}`);
@@ -120,7 +120,7 @@ export function EmployeeTable() {
 
   // ========== HEADERS ==========
 
-  // ✅ Usar useMemo para evitar recrear headers en cada render
+  // Usar useMemo para evitar recrear headers en cada render
   const headers = useMemo<(string | GridieHeaderConfig)[]>(
     () => [
       {
@@ -202,7 +202,7 @@ export function EmployeeTable() {
 
   // ========== BODY CON ACCIONES ==========
 
-  // ✅ useMemo con dependencias correctas
+  // useMemo con dependencias correctas
   const bodyWithActions = useMemo<EmployeeGridRow[]>(
     () =>
       employees.map((emp) => ({

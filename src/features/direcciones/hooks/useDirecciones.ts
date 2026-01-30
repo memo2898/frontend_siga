@@ -45,7 +45,7 @@ export function useDirecciones(options: UseDireccionesOptions = {}) {
           label: String(item.nombre || item.nombre || `ID: ${item.id}`)
         }));
         setSedesOptions(sedesOpts);
-        console.log('✅ Opciones de Sedes cargadas:', sedesOpts.length);
+        console.log('Opciones de Sedes cargadas:', sedesOpts.length);
       } catch (error) {
         console.error('❌ Error cargando opciones de Sedes:', error);
         toastx.error('Error al cargar opciones de Sedes');

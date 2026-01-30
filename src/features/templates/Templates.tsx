@@ -13,7 +13,7 @@ import './components/TemplatesForm.css';
 
 type ModalMode = 'create' | 'edit' | 'delete' | null;
 
-function Templates() {
+export function Templates() {
   const gridieRef = useRef<GridieRef>(null);
 
   const { templates, meta, loading, saving, paginated, fetch, create, update, remove } = useTemplates();
@@ -142,4 +142,4 @@ function Templates() {
   );
 }
 
-export default Templates;
+//export default Templates;

@@ -53,7 +53,7 @@ export const InputX: React.FC<InputXProps> = ({
 }) => {
   const formContext = useFormXContext();
   
-  // ✅ Extraer defaultValue de inputProps antes del spread
+  // Extraer defaultValue de inputProps antes del spread
   const { defaultValue, ...restInputProps } = inputProps;
   
   const [value, setValue] = useState<string>(() => 
@@ -64,7 +64,7 @@ export const InputX: React.FC<InputXProps> = ({
   const [touched, setTouched] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // ✅ Sync internal state with defaultValue prop when it changes
+  // Sync internal state with defaultValue prop when it changes
   if (defaultValue !== prevDefaultValue) {
     const defaultVal = defaultValue !== undefined ? String(defaultValue) : "";
     setValue(defaultVal);

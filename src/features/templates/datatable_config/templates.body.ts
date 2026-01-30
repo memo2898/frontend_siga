@@ -86,12 +86,12 @@ const actionButtonStyles = `
 `;
 
 export const toTemplatesGridRow = (templates: Templates, handlers: TemplatesHandlers): TemplatesGridRow => ({
-  id: templates.id,
+   id: templates.id,
   nombre: templates.nombre,
   descripcion: templates.descripcion,
-  tipo: templates.tipo,
-  contenido_hbs: templates.contenido_hbs,
-  variables_utilizadas: templates.variables_utilizadas,
+  // tipo: templates.tipo,
+  // contenido_hbs: templates.contenido_hbs,
+  // variables_utilizadas: templates.variables_utilizadas,
   agregado_por: templates.agregado_por,
   agregado_en: templates.agregado_en,
   actualizado_por: templates.actualizado_por,

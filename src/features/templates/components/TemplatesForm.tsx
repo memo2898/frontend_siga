@@ -100,17 +100,17 @@ export function TemplatesForm({ initialData, onSubmit, onCancel, loading }: Temp
         />
 
         {/* DynamicFieldsX - Tipo */}
-        <DynamicFieldsX
+        {/* <DynamicFieldsX
           name="tipo"
           label="Tipo"
           helperText="Campo tipo"
           contract="none"
           value={ tipoState }
           onChange={setTipoState}
-        />
+        /> */}
 
         {/* InputX - Contenido Hbs */}
-        <InputX
+        {/* <InputX
           type="text"
           name="contenido_hbs"
           label="Contenido Hbs"
@@ -122,17 +122,17 @@ export function TemplatesForm({ initialData, onSubmit, onCancel, loading }: Temp
               { type: 'maxLength', value: 255, message: '' },
             ],
           } }
-        />
+        /> */}
 
         {/* DynamicFieldsX - Variables Utilizadas */}
-        <DynamicFieldsX
+        {/* <DynamicFieldsX
           name="variables_utilizadas"
           label="Variables Utilizadas"
           helperText="Campo variables_utilizadas"
           contract="none"
           value={ variables_utilizadasState }
           onChange={setVariablesUtilizadasState}
-        />
+        /> */}
 
       </div>
 

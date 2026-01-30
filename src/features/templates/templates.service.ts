@@ -17,6 +17,7 @@ export const getAll = async () => {
     !EXCLUDED_STATES.includes(element.estado as string)
   );
   
+  
   return data;
 };
 
@@ -30,9 +31,14 @@ export const create = async (data: TemplatesCreateDTO) => {
     estado: 'ACTIVO',
     agregado_en: new Date().toISOString(),
   };
-  return await http.post<Templates>(BASE, payload);
-};
 
+  const response = await http.post<Templates>(BASE, payload);
+
+
+console.log(response)
+  return  response
+
+  };
 export const update = async (id: number, data: TemplatesUpdateDTO) => {
   const payload = {
     ...data,
