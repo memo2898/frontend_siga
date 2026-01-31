@@ -102,7 +102,7 @@ export function Usuarios() {
     <div style={{ padding: 20 }}>
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
-        <h1 style={{ margin: 0 }}>Usuarios</h1>
+       <h1 className="tituloPrincipal">Usuarios</h1>
         <button onClick={openCreate} className="btn btn-success">
           + Nuevo Usuarios
         </button>

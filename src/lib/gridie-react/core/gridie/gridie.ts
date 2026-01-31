@@ -322,7 +322,7 @@ private validateConfig(config: GridieConfig): void {
     if (typeof firstRow === 'object' && firstRow !== null && !Array.isArray(firstRow)) {
       if (!(config.identityField in firstRow)) {
         console.warn(
-          `⚠️ Gridie: El identityField "${config.identityField}" no existe en las filas del body.`,
+          ` Gridie: El identityField "${config.identityField}" no existe en las filas del body.`,
           `\nCampos disponibles:`, Object.keys(firstRow),
           `\nAsegúrate de que todas las filas tengan este campo.`
         );
@@ -373,7 +373,7 @@ public debugIdentityField(): void {
   const duplicates = values.filter((val, index) => values.indexOf(val) !== index);
   
   if (duplicates.length > 0) {
-    console.warn("  ⚠️ Valores duplicados encontrados:", [...new Set(duplicates)]);
+    console.warn("   Valores duplicados encontrados:", [...new Set(duplicates)]);
   } else {
     //console.log("  No hay valores duplicados");
   }
@@ -496,7 +496,7 @@ private renderErrorState(): void {
     </style>
     
     <div class="gridie-error-container">
-      <div class="gridie-error-icon">⚠️</div>
+      <div class="gridie-error-icon"></div>
       <h3 class="gridie-error-title">Error al cargar la tabla</h3>
       <p class="gridie-error-message">${this._errorMessage}</p>
       <button class="gridie-error-btn" onclick="location.reload()">
@@ -532,19 +532,19 @@ private buildIdentityMap(): void {
   
   this._originalBody.forEach((row, index) => {
     if (typeof row !== 'object' || row === null || Array.isArray(row)) {
-      console.warn(`⚠️ Gridie: La fila en índice ${index} no es un objeto.`);
+      console.warn(` Gridie: La fila en índice ${index} no es un objeto.`);
       return;
     }
     
     const identityValue = row[fieldName];
     
     if (identityValue === undefined || identityValue === null) {
-      console.warn(`⚠️ Gridie: La fila en índice ${index} no tiene el campo "${fieldName}".`);
+      console.warn(` Gridie: La fila en índice ${index} no tiene el campo "${fieldName}".`);
       return;
     }
     
     if (this._identityMap.has(identityValue)) {
-      console.warn(`⚠️ Gridie: Valor duplicado "${identityValue}".`);
+      console.warn(` Gridie: Valor duplicado "${identityValue}".`);
       return;
     }
     
@@ -656,7 +656,7 @@ public updateRowByIdentity(value: any, data: Partial<any>): boolean {
   const row = this._identityMap.get(value);
   
   if (!row) {
-    console.warn(`⚠️ No se encontró fila con identity = "${value}"`);
+    console.warn(` No se encontró fila con identity = "${value}"`);
     return false;
   }
   
@@ -706,7 +706,7 @@ public removeRowByIdentity(value: any): boolean {
   const row = this._identityMap.get(value);
   
   if (!row) {
-    console.warn(`⚠️ Gridie.removeRowByIdentity: No se encontró fila con ${this._identityField} = "${value}"`);
+    console.warn(` Gridie.removeRowByIdentity: No se encontró fila con ${this._identityField} = "${value}"`);
     return false;
   }
   
@@ -750,7 +750,7 @@ connectedCallback() {
     );
     
     if (!scrollElement) {
-     // console.warn('⚠️ No se encontró elemento con scroll horizontal');
+     // console.warn(' No se encontró elemento con scroll horizontal');
       return;
     }
     
@@ -1014,7 +1014,7 @@ public addRow(row: any): boolean {
       return false;
     }
     
-    // ⚠️ Verificar duplicados
+    //  Verificar duplicados
     if (this._identityMap.has(identityValue)) {
       console.error(`❌ Gridie.addRow: Ya existe una fila con ${this._identityField} = "${identityValue}". Operación rechazada.`);
       return false;
@@ -4006,7 +4006,7 @@ private getOperatorsForColumn(header: GridieHeaderConfig): FilterOperator[] {
       return [...customOps]; // Retornar copia
     }
     
-    console.warn(`⚠️ Operadores personalizados inválidos para "${header.label}", usando defaults`);
+    console.warn(` Operadores personalizados inválidos para "${header.label}", usando defaults`);
   }
 
   // PASO 2: Usar operadores por defecto según tipo
@@ -4502,7 +4502,7 @@ private renderPaginationInfo(): string {
   
   // PROTECCIÓN: Si no hay idioma configurado, usar valores por defecto
   if (!this._lang || !this._lang.paging) {
-    console.warn("⚠️ Idioma de paginación no configurado, usando valores por defecto");
+    console.warn(" Idioma de paginación no configurado, usando valores por defecto");
     
     if (this._totalItems === 0) {
       return `
@@ -5572,7 +5572,7 @@ render() {
             return;
           }
           
-          console.warn('⚠️ No se encontró fila original con identity:', identityValue);
+          console.warn(' No se encontró fila original con identity:', identityValue);
         }
         
         // Fallback: usar la fila del currentBody

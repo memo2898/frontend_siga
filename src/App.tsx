@@ -9,7 +9,9 @@ import SedesPage from './pages/organizacion/sedes/SedesPage';
 import DireccionesPage from './pages/organizacion/direcciones/DireccionesPage';
 import DepartamentosPage from './pages/organizacion/departamentos/DepartamentosPage';
 import UsuariosPage from './pages/usuarios/UsuariosPage';
-import TemplatesPage from './pages/templates/TemplatesPage';
+import TemplatesInventarioPage from './pages/templates/TemplatesInventarioPage';
+import TemplatesModuloPage from './pages/templates/TemplatesModuloPage';
+import TemplateBuilderPage from './pages/templateBuilderPage/TemplateBuilderPage';
 
 
 const App = () => {
@@ -20,6 +22,7 @@ const App = () => {
       <Route path="/login" element={<Login />} />
       <Route path="/lobby" element={<Lobby/>} /> {/* Elegirems el perfil con el que se logueará el usuario */}
 
+ <Route path="template-builder/:id" element={<TemplateBuilderPage/>} />
       {/* Rutas con Sidebar */}
       <Route element={<SidebarWrapper />}>
 
@@ -34,7 +37,9 @@ const App = () => {
      
      
           <Route path="usuarios" element={<UsuariosPage/>} />
-          <Route path="templates" element={<TemplatesPage/>} />
+          <Route path="templates/inventario" element={<TemplatesInventarioPage/>} />
+          <Route path="templates/modulos" element={<TemplatesModuloPage/>} />
+         
 
 
       </Route>

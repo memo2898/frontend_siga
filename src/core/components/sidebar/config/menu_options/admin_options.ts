@@ -101,13 +101,18 @@ export const ADMIN_OPTIONS = [
   // ============================================
   // TEMPLATES Y DOCUMENTOS
   // ============================================
-  {
+  
+
+   {
     id: 'templates',
     icon: 'fas fa-file-alt',
-    text: 'Templates',
-    href: '/templates'
+    text: 'Plantillas',
+    submenu: [
+      { text: 'Plantillas Inventario', href: '/templates/inventario', icon: 'fas fa-boxes' },
+      { text: 'Plantillas Modulos', href: '/templates/modulos', icon: 'fas fa-th-large' },
+     
+    ]
   },
-
 
 
 

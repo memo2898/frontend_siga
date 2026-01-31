@@ -1,0 +1,129 @@
+.signature-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.signature-modal {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  max-width: 700px;
+  width: 90%;
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.signature-modal__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.signature-modal__header h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #333;
+}
+
+.signature-modal__close {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: #999;
+  cursor: pointer;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s;
+}
+
+.signature-modal__close:hover {
+  color: #333;
+}
+
+.signature-modal__body {
+  padding: 1.5rem;
+}
+
+.signature-modal__canvas {
+  width: 100%;
+  border: 2px solid #e0e0e0;
+  border-radius: 4px;
+  cursor: crosshair;
+  background-color: white;
+  touch-action: none;
+}
+
+.signature-modal__footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding: 1.5rem;
+  border-top: 1px solid #e0e0e0;
+}
+
+.signature-modal__btn {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 500;
+}
+
+.signature-modal__btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.signature-modal__btn--primary {
+  background-color: #007bff;
+  color: white;
+}
+
+.signature-modal__btn--primary:hover:not(:disabled) {
+  background-color: #0056b3;
+}
+
+.signature-modal__btn--secondary {
+  background-color: #6c757d;
+  color: white;
+}
+
+.signature-modal__btn--secondary:hover:not(:disabled) {
+  background-color: #545b62;
+}

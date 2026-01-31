@@ -1,0 +1,44 @@
+/* Elementos TEXT en el Canvas */
+.canvas-text-element {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+/* Variables en el Canvas */
+.canvas-variable {
+  padding: 1px 3px;
+  border-radius: 3px;
+  font-weight: 500;
+}
+
+/* Variable válida - verde con efecto de ola brillante */
+.canvas-variable--valid {
+  color: #2e7d32;
+  background: linear-gradient(
+    90deg,
+    rgba(76, 175, 80, 0.2) 0%,
+    rgba(129, 199, 132, 0.35) 50%,
+    rgba(76, 175, 80, 0.2) 100%
+  );
+  background-size: 200% 100%;
+  animation: canvas-shimmer 2s ease-in-out infinite;
+  border: 1px solid rgba(76, 175, 80, 0.4);
+}
+
+@keyframes canvas-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Variable inválida - gris sin efecto */
+.canvas-variable--invalid {
+  color: #757575;
+  background-color: rgba(158, 158, 158, 0.15);
+  border: 1px dashed rgba(158, 158, 158, 0.4);
+}

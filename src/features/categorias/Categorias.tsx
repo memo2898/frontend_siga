@@ -78,7 +78,7 @@ function Categorias() {
     <div style={ { padding: 20 } }>
       {/* Header */}
       <div style={ { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 } }>
-        <h1 style={ { margin: 0 } }>Categorias</h1>
+        <h1 className="tituloPrincipal">Categorias</h1>
         <button onClick={openCreate} className="btn btn-success">
           + Nuevo Categorias
         </button>

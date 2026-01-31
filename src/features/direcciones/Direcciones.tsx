@@ -78,7 +78,7 @@ export function Direcciones() {
     <div style={ { padding: 20 } }>
       {/* Header */}
       <div style={ { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 } }>
-        <h1 style={ { margin: 0 } }>Direcciones</h1>
+        <h1 className="tituloPrincipal">Direcciones</h1>
         <button onClick={openCreate} className="btn btn-success">
           + Nuevo Direcciones
         </button>

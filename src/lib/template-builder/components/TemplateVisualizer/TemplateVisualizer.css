@@ -1,0 +1,225 @@
+.template-visualizer {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: #f5f5f5;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  overflow-y: auto;
+}
+
+.visualizer__document {
+  background-color: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+  padding: 20mm;
+  overflow: visible;
+}
+
+/* Estilos para campos de firma clickeables */
+.signature-field {
+  min-height: 80px;
+  border: 2px dashed #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  background-color: #fafafa;
+  margin-top: 10px;
+}
+
+.signature-field:hover {
+  border-color: #007bff;
+  background-color: #f0f7ff;
+}
+
+.signature-field--captured {
+  border-style: solid;
+  border-color: #28a745;
+  background-color: white;
+}
+
+.signature-field__placeholder {
+  color: #999;
+  font-size: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.signature-field__placeholder-icon {
+  font-size: 24px;
+}
+
+.signature-field__image {
+  max-width: 100%;
+  max-height: 70px;
+}
+
+/* Placeholder de firma dentro del documento */
+.signature-placeholder {
+  min-height: 80px;
+  min-width: 180px;
+  border: 2px dashed #bbb;
+  border-radius: 4px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  background-color: #fafafa;
+  margin-top: 10px;
+  padding: 10px;
+}
+
+.signature-placeholder:hover {
+  border-color: #007bff;
+  background-color: #e8f4fc;
+  box-shadow: 0 2px 8px rgba(0, 123, 255, 0.2);
+}
+
+.signature-placeholder__text {
+  color: #888;
+  font-size: 13px;
+  font-style: italic;
+}
+
+.signature-placeholder img {
+  max-width: 200px;
+  max-height: 80px;
+}
+
+/* Cuando ya tiene firma, mantener clickeable para editar */
+.signature-placeholder:has(img) {
+  border: 1px solid transparent;
+  background-color: transparent;
+  cursor: pointer;
+  position: relative;
+}
+
+.signature-placeholder:has(img):hover {
+  border-color: #007bff;
+  background-color: rgba(0, 123, 255, 0.05);
+}
+
+.signature-placeholder:has(img):hover::after {
+  content: "Click para editar";
+  position: absolute;
+  bottom: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 11px;
+  color: #007bff;
+  white-space: nowrap;
+}
+
+/* Lista de campos de firma */
+.visualizer__signature-fields {
+  background-color: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1rem;
+}
+
+.visualizer__signature-fields h4 {
+  margin: 0 0 1rem 0;
+  color: #333;
+  font-size: 1rem;
+}
+
+.visualizer__signature-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.visualizer__actions {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.visualizer__signature-prompt {
+  margin-bottom: 1.5rem;
+}
+
+.visualizer__signature-prompt p {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.visualizer__signature-count {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.visualizer__buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.visualizer__btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 500;
+}
+
+.visualizer__btn--primary {
+  background-color: #007bff;
+  color: white;
+}
+
+.visualizer__btn--primary:hover {
+  background-color: #0056b3;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
+}
+
+.visualizer__btn--secondary {
+  background-color: #6c757d;
+  color: white;
+}
+
+.visualizer__btn--secondary:hover {
+  background-color: #545b62;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(108, 117, 125, 0.3);
+}
+
+@media print {
+  .visualizer__actions {
+    display: none;
+  }
+
+  .template-visualizer {
+    padding: 0;
+    background-color: white;
+  }
+
+  .visualizer__document {
+    box-shadow: none;
+    padding: 0;
+  }
+
+  .signature-placeholder {
+    border: none;
+    background-color: transparent;
+    min-height: auto;
+  }
+
+  .signature-placeholder__text {
+    display: none;
+  }
+}
