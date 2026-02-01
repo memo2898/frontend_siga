@@ -16,29 +16,42 @@ export const getAll = async () => {
   const data = response.filter(element => 
     !EXCLUDED_STATES.includes(element.estado as string)
   );
-  
+  //console.log(data)
   return data;
 };
 
 export const getById = async (id: number) => {
-  return await http.get<Categorias>(`${BASE}/${id}`);
+
+
+    const response = await http.get<Categorias>(`${BASE}/${id}`);
+        //console.log(response)
+  return response
 };
 
 export const create = async (data: CategoriasCreateDTO) => {
+  //console.log(data)
   const payload = {
     ...data,
     estado: 'ACTIVO',
     agregado_en: new Date().toISOString(),
   };
-  return await http.post<Categorias>(BASE, payload);
+
+  const response = await http.post<Categorias>(BASE, payload);
+  //console.log(response)
+  return response
 };
 
 export const update = async (id: number, data: CategoriasUpdateDTO) => {
+  //console.log(data)
   const payload = {
     ...data,
     actualizado_en: new Date().toISOString(),
   };
-  return await http.patch<Categorias>(`${BASE}/${id}`, payload);
+
+
+  const response =  await http.patch<Categorias>(`${BASE}/${id}`, payload);
+  //console.log(response)
+  return response
 };
 
 export const remove = async (id: number, softDelete = IS_SOFT_DELETE) => {

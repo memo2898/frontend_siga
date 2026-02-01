@@ -1,8 +1,12 @@
+import { Categorias } from "../../features/categorias/Categorias"
+
 
 function CategoriasPage() {
-  return (
-    <div>CategoriasPage</div>
-  )
+    return (
+        <>
+<Categorias/>
+        </>
+    )
 }
 
 export default CategoriasPage

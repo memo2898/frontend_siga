@@ -52,7 +52,7 @@ export function CategoriasForm({ initialData, onSubmit, onCancel, loading }: Cat
 
   return (
     <FormX ref={formRef} onSubmit={handleSubmit} validateOn="blur">
-      <div style={ { display: 'flex', flexDirection: 'column', gap: 16 } }>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
         {/* InputX - Nombre */}
         <InputX
           type="text"
@@ -60,12 +60,13 @@ export function CategoriasForm({ initialData, onSubmit, onCancel, loading }: Cat
           label="Nombre"
           placeholder="Ingrese nombre"
           helperText="Nombre de la categoría"
-          defaultValue={ initialData?.nombre }
-          rules={ {
+          defaultValue={initialData?.nombre}
+          rules={{
             validations: [
               { type: 'maxLength', value: 255, message: '' },
+              { type: 'required', message: 'Campo requerido' }
             ],
-          } }
+          }}
         />
 
         {/* InputX - Descripcion */}
@@ -75,31 +76,44 @@ export function CategoriasForm({ initialData, onSubmit, onCancel, loading }: Cat
           label="Descripcion"
           placeholder="Ingrese descripcion"
           helperText="Descripción de la categoría"
-          defaultValue={ initialData?.descripcion }
+          defaultValue={initialData?.descripcion}
+          rules={{
+            validations: [
+
+              { type: 'required', message: 'Campo requerido' }
+            ],
+          }}
         />
 
         {/* InputX - Tipo Control */}
-        <InputX
-          type="text"
+        <SelectX
+
           name="tipo_control"
           label="Tipo Control"
           placeholder="Ingrese tipo control"
+          options={[
+            { value: "UNITARIO", label: "UNITARIO" },
+            { value: "CANTIDAD", label: "CANTIDAD" },
+          ]}
           helperText="Campo tipo_control"
-          defaultValue={ initialData?.tipo_control }
-          rules={ {
+          defaultValue={initialData?.tipo_control}
+          rules={{
             validations: [
               { type: 'maxLength', value: 255, message: '' },
+              { type: 'required', message: 'Campo requerido' }
             ],
-          } }
+          }}
         />
+
+
 
         {/* DynamicFieldsX - Campos Activo */}
         <DynamicFieldsX
           name="campos_activo"
           label="Campos Activo"
-          helperText="Estructura de campos personalizados para los activos de esta categoría"
+          // helperText="Estructura de campos personalizados para los activos de esta categoría"
           contract="define"
-          value={ campos_activoState }
+          value={campos_activoState}
           onChange={setCamposActivoState}
         />
 

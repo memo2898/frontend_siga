@@ -1,18 +1,19 @@
 import type { GridieHeaderConfig } from '../../../lib/gridie-react';
 
 export const categoriasHeaders: GridieHeaderConfig[] = [
-  {
-    label: 'Id',
-    type: 'number',
-    sortable: true,
-    width: '80px',
-  },
+  // {
+  //   label: 'Id',
+  //   type: 'number',
+  //   sortable: true,
+  //   width: '80px',
+  // },
   {
     label: 'Nombre',
     type: 'string',
     sortable: true,
     filters: {
       filterRow: { visible: true },
+      headerFilter:{visible:true}
     },
   },
   {
@@ -27,9 +28,13 @@ export const categoriasHeaders: GridieHeaderConfig[] = [
     label: 'Tipo Control',
     type: 'string',
     sortable: true,
+    filters: {
+      // filterRow: { visible: true },
+      headerFilter:{visible:true}
+    },
   },
   {
-    label: 'Campos Activo',
+    label: 'Campos Extras (Para Activos)',
     type: 'string',
     sortable: true,
   },

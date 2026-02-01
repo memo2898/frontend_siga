@@ -13,7 +13,7 @@ import './components/CategoriasForm.css';
 
 type ModalMode = 'create' | 'edit' | 'delete' | null;
 
-function Categorias() {
+export function Categorias() {
   const gridieRef = useRef<GridieRef>(null);
 
   const { categorias, meta, loading, saving, paginated, fetch, create, update, remove } = useCategorias();
