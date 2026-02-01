@@ -3,6 +3,7 @@ import type { TemplatesModulos, TemplatesModulosGridRow } from '../templatesmodu
 export interface TemplatesModulosHandlers {
   onEdit: (templatesModulos: TemplatesModulos) => void;
   onDelete: (templatesModulos: TemplatesModulos) => void;
+    onTemplateBuilder: (templatesInventarios: TemplatesModulos) => void;
 }
 
 // Estilos inline para los botones de acción
@@ -57,6 +58,21 @@ const actionButtonStyles = `
       background: #bfdbfe;
     }
 
+    .btn-builder {
+      color: #059669;
+      border-color: #d1fae5;
+      background: #ecfdf5;
+    }
+
+    .btn-builder:hover {
+      background: #d1fae5;
+      border-color: #a7f3d0;
+    }
+
+    .btn-builder:active {
+      background: #a7f3d0;
+    }
+
     .btn-delete {
       color: #dc2626;
       border-color: #fee2e2;
@@ -85,12 +101,13 @@ const actionButtonStyles = `
   </style>
 `;
 
+
 export const toTemplatesModulosGridRow = (templatesModulos: TemplatesModulos, handlers: TemplatesModulosHandlers): TemplatesModulosGridRow => ({
   id: templatesModulos.id,
   nombre: templatesModulos.nombre,
   descripcion: templatesModulos.descripcion,
-  contenido_hbs: templatesModulos.contenido_hbs,
-  variables_utilizadas: templatesModulos.variables_utilizadas,
+  // contenido_hbs: templatesModulos.contenido_hbs,
+  // variables_utilizadas: templatesModulos.variables_utilizadas,
   agregado_por: templatesModulos.agregado_por,
   agregado_en: templatesModulos.agregado_en,
   actualizado_por: templatesModulos.actualizado_por,
@@ -110,6 +127,20 @@ export const toTemplatesModulosGridRow = (templatesModulos: TemplatesModulos, ha
       `,
       event: 'click',
       funct: () => handlers.onEdit(templatesModulos),
+    },
+      {
+      content: `
+        <button class="btn-action btn-builder" title="Template Builder">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+            <line x1="3" y1="9" x2="21" y2="9"/>
+            <line x1="9" y1="21" x2="9" y2="9"/>
+          </svg>
+          <span>Builder</span>
+        </button>
+      `,
+      event: 'click',
+      funct: () => handlers.onTemplateBuilder(templatesModulos),
     },
     {
       content: `

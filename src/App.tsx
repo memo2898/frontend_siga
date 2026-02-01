@@ -23,7 +23,8 @@ const App = () => {
       <Route path="/login" element={<Login />} />
       <Route path="/lobby" element={<Lobby/>} /> {/* Elegirems el perfil con el que se logueará el usuario */}
 
- <Route path="template-builder/:id" element={<TemplateBuilderPage/>} />
+      <Route path="template-builder-inventarios/:id" element={<TemplateBuilderPage builderType ='inventario'/>} />
+      <Route path="template-builder-modulos/:id" element={<TemplateBuilderPage builderType ='modulos'/>} />
       {/* Rutas con Sidebar */}
       <Route element={<SidebarWrapper />}>
 

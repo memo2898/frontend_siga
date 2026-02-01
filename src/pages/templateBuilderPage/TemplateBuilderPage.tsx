@@ -1,10 +1,20 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useState } from "react";
-import { useParams ,useNavigate} from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { TemplateBuilder } from "../../lib/template-builder"
 import type { Template, TemplateElement, ImageProperties, VariableGroupsMap } from "../../lib/template-builder/types/template.types";
 import { createDefaultPageSize, createEmptyPage, generateId } from "../../lib/template-builder/utils/helpers";
 
-import { getById, update } from "../../features/templatesinventarios/templatesinventarios.service";
+import {
+  getById as getTemplateInventarioById,
+  update as updateTemplateInventario
+} from "../../features/templatesinventarios/templatesinventarios.service";
+
+import {
+  getById as getTemplateModulosById,
+  update as updateTemplateModulos
+} from "../../features/templatesmodulos/templatesmodulos.service";
+
 import { uploadImage, base64ToFile, isBase64Image, isServerUrl } from "../../features/uploads/uploads.service";
 import TemplateBuilderSkeleton from "./components/TemplateBuilderSkeleton";
 
@@ -25,13 +35,26 @@ function normalizeTemplate(data: Partial<Template>): Template {
     };
 }
 
-function TemplateBuilderPage() {
+interface TemplateBuilderProps {
+    builderType: 'inventario' | 'modulos'
+}
+
+function TemplateBuilderPage({ builderType }: TemplateBuilderProps) {
     const { id } = useParams<{ id: string }>(); // Captura el ID de la URL
-   const navigate = useNavigate();
+    const navigate = useNavigate();
     
     const [initialTemplate, setInitialTemplate] = useState<Template | undefined>(undefined);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
+
+    // Seleccionar servicios según builderType
+    const getTemplateById = builderType === 'inventario' 
+        ? getTemplateInventarioById 
+        : getTemplateModulosById;
+    
+    const updateTemplate = builderType === 'inventario'
+        ? updateTemplateInventario
+        : updateTemplateModulos;
 
     useEffect(() => {
         const loadTemplate = async () => {
@@ -45,8 +68,8 @@ function TemplateBuilderPage() {
                 setIsLoading(true);
                 setError(null);
 
-                // Llamar al servicio para obtener el template
-                const templateData = await getById(parseInt(id));
+                // Llamar al servicio correspondiente para obtener el template
+                const templateData = await getTemplateById(parseInt(id));
 
                 // Si el template tiene variables_utilizadas guardadas, parseamos el JSON
                 if (templateData?.variables_utilizadas) {
@@ -67,96 +90,66 @@ function TemplateBuilderPage() {
         };
 
         loadTemplate();
-    }, [id]);
-
-
-
-
-
+    }, [id, builderType]); // Agregamos builderType como dependencia
 
     // ============================================================
-// SIMULACIÓN: Datos que vendrían del padre (tablas de BD)
-// ============================================================
+    // SIMULACIÓN: Datos que vendrían del padre (tablas de BD)
+    // ============================================================
 
-// Simulamos que el padre obtiene los schemas de sus tablas
-// y los envía al builder como grupos de variables
-const variableGroups: VariableGroupsMap = {
-  clientes: {
-    groupLabel: 'Clientes',
-    schema: {
-      nombre: { type: 'string', label: 'Nombre completo' },
-      cedula: { type: 'string', label: 'Cédula / RIF' },
-      email: { type: 'string', label: 'Correo electrónico' },
-      telefono: { type: 'string', label: 'Teléfono' },
-      direccion: { type: 'string', label: 'Dirección' }
-    }
-  },
-  productos: {
-    groupLabel: 'Productos',
-    schema: {
-      codigo: { type: 'string', label: 'Código' },
-      descripcion: { type: 'string', label: 'Descripción' },
-      precio: { type: 'number', label: 'Precio unitario' },
-      cantidad: { type: 'number', label: 'Cantidad' },
-      subtotal: { type: 'number', label: 'Subtotal' }
-    }
-  },
-  empresa: {
-    groupLabel: 'Empresa',
-    schema: {
-      razonSocial: { type: 'string', label: 'Razón social' },
-      rif: { type: 'string', label: 'RIF' },
-      direccionFiscal: { type: 'string', label: 'Dirección fiscal' },
-      telefono: { type: 'string', label: 'Teléfono' },
-      logo: { type: 'string', label: 'URL del logo' }
-    }
-  },
-  factura: {
-    groupLabel: 'Factura',
-    schema: {
-      numero: { type: 'string', label: 'Número de factura' },
-      fecha: { type: 'date', label: 'Fecha de emisión' },
-      fechaVencimiento: { type: 'date', label: 'Fecha de vencimiento' },
-      subtotal: { type: 'number', label: 'Subtotal' },
-      impuesto: { type: 'number', label: 'Impuesto (IVA)' },
-      total: { type: 'number', label: 'Total a pagar' },
-      observaciones: { type: 'string', label: 'Observaciones' }
-    }
-  },
-  firmas: {
-    groupLabel: 'Firmas',
-    schema: {
-      firmaCliente: { type: 'signature', label: 'Firma del cliente' },
-      firmaVendedor: { type: 'signature', label: 'Firma del vendedor' }
-    }
-  }
-};
+    // Simulamos que el padre obtiene los schemas de sus tablas
+    // y los envía al builder como grupos de variables
+    const variableGroups: VariableGroupsMap = {
+        clientes: {
+            groupLabel: 'Clientes',
+            schema: {
+                nombre: { type: 'string', label: 'Nombre completo' },
+                cedula: { type: 'string', label: 'Cédula / RIF' },
+                email: { type: 'string', label: 'Correo electrónico' },
+                telefono: { type: 'string', label: 'Teléfono' },
+                direccion: { type: 'string', label: 'Dirección' }
+            }
+        },
+        productos: {
+            groupLabel: 'Productos',
+            schema: {
+                codigo: { type: 'string', label: 'Código' },
+                descripcion: { type: 'string', label: 'Descripción' },
+                precio: { type: 'number', label: 'Precio unitario' },
+                cantidad: { type: 'number', label: 'Cantidad' },
+                subtotal: { type: 'number', label: 'Subtotal' }
+            }
+        },
+        empresa: {
+            groupLabel: 'Empresa',
+            schema: {
+                razonSocial: { type: 'string', label: 'Razón social' },
+                rif: { type: 'string', label: 'RIF' },
+                direccionFiscal: { type: 'string', label: 'Dirección fiscal' },
+                telefono: { type: 'string', label: 'Teléfono' },
+                logo: { type: 'string', label: 'URL del logo' }
+            }
+        },
+        factura: {
+            groupLabel: 'Factura',
+            schema: {
+                numero: { type: 'string', label: 'Número de factura' },
+                fecha: { type: 'date', label: 'Fecha de emisión' },
+                fechaVencimiento: { type: 'date', label: 'Fecha de vencimiento' },
+                subtotal: { type: 'number', label: 'Subtotal' },
+                impuesto: { type: 'number', label: 'Impuesto (IVA)' },
+                total: { type: 'number', label: 'Total a pagar' },
+                observaciones: { type: 'string', label: 'Observaciones' }
+            }
+        },
+        firmas: {
+            groupLabel: 'Firmas',
+            schema: {
+                firmaCliente: { type: 'signature', label: 'Firma del cliente' },
+                firmaVendedor: { type: 'signature', label: 'Firma del vendedor' }
+            }
+        }
+    };
 
-// ============================================================
-// EJEMPLO: Template existente para edición
-// Descomenta esto cuando quieras cargar un template guardado
-// ============================================================
-// const templateFromServer: Template = {
-//   id: "template-123",
-//   name: "Mi Template",
-//   pageSize: { format: "A4", width: 210, height: 297, orientation: "portrait" },
-//   pages: [
-//     {
-//       id: "page-1",
-//       elements: [
-//         {
-//           id: "elem-1",
-//           type: "TEXT",
-//           content: "Hola {{nombre}}",
-//           position: { x: 0, y: 0 },
-//           positionMode: "static",
-//           styles: { fontSize: 16 },
-//           order: 0
-//         }
-//       ]
-//     }
-//   ]
-// };
     /**
      * Procesa el template para subir imágenes base64 al servidor
      * y reemplazar las URLs por las del servidor
@@ -177,8 +170,9 @@ const variableGroups: VariableGroupsMap = {
                             const filename = `template_${id}_${element.id}_${Date.now()}.png`;
                             const file = base64ToFile(url, filename);
 
-                            // Subir al servidor en carpeta de templates
-                            const response = await uploadImage(file, `img_templates/inventario/template_${id}`);
+                            // Subir al servidor en carpeta según builderType
+                            const folderPath = `img_templates/${builderType}/template_${id}`;
+                            const response = await uploadImage(file, folderPath);
                             console.log('Upload response:', response);
 
                             // Manejar diferentes estructuras de respuesta
@@ -240,38 +234,38 @@ const variableGroups: VariableGroupsMap = {
             const { generateHandlebarsTemplate } = await import("../../lib/template-builder/utils/hbsGenerator");
             const updatedHbsContent = generateHandlebarsTemplate(processedTemplate);
 
-            // 3. Guardar template con URLs del servidor
+            // 3. Guardar template con URLs del servidor usando el servicio correspondiente
             const payload = {
                 nombre: processedTemplate.name || '',
                 contenido_hbs: updatedHbsContent,
                 variables_utilizadas: JSON.stringify(processedTemplate),
             };
 
-            await update(parseInt(id), payload);
-            console.log('Template actualizado correctamente');
+            await updateTemplate(parseInt(id), payload);
+            console.log(`Template de ${builderType} actualizado correctamente`);
         } catch (err) {
             console.error('Error al guardar template:', err);
         }
     };
     
-  if (isLoading) {
-    return <TemplateBuilderSkeleton />;
-  }
+    if (isLoading) {
+        return <TemplateBuilderSkeleton />;
+    }
 
-const handleExit = () => {
+    const handleExit = () => {
+        navigate(`/templates/${builderType}`);
+    };
 
-    navigate('/templates/inventario'); // O la ruta que necesites
-};
-  return (
-    <>
-    <TemplateBuilder
-       variableGroups={variableGroups}
-       onSave={handleSave}
-       onExit={handleExit}
-       initialTemplate={initialTemplate}
-    />
-    </>
-  )
+    return (
+        <>
+            <TemplateBuilder
+                variableGroups={variableGroups}
+                onSave={handleSave}
+                onExit={handleExit}
+                initialTemplate={initialTemplate}
+            />
+        </>
+    )
 }
 
 export default TemplateBuilderPage

@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useRef, useState } from 'react';
-import { FormX, InputX, SelectX, InputFileX, DynamicFieldsX } from '../../../lib/uiX';
-import type { FormXRef, FormSubmitResult, FieldDefinition } from '../../../lib/uiX';
+import { FormX, InputX,  } from '../../../lib/uiX';
+import type { FormXRef, FormSubmitResult } from '../../../lib/uiX';
 import type { TemplatesModulos } from '../templatesmodulos.types';
 import './TemplatesModulosForm.css';
 
@@ -17,24 +18,9 @@ export function TemplatesModulosForm({ initialData, onSubmit, onCancel, loading 
   const [showError, setShowError] = useState(false);
 
   // Función para normalizar variables_utilizadas a array
-  const normalizeVariablesUtilizadas = (value: any): FieldDefinition[] => {
-    if (!value) return [];
-    if (Array.isArray(value)) return value;
-    if (typeof value === 'string') {
-      try {
-        const parsed = JSON.parse(value);
-        return Array.isArray(parsed) ? parsed : [];
-      } catch {
-        return [];
-      }
-    }
-    return [];
-  };
 
   // Estado para DynamicFieldsX
-  const [variables_utilizadasState, setVariablesUtilizadasState] = useState<FieldDefinition[]>(
-    normalizeVariablesUtilizadas(initialData?.variables_utilizadas)
-  );
+
 
   const handleSubmit = (result: FormSubmitResult) => {
     if (!result.general_validation) {
@@ -52,20 +38,21 @@ export function TemplatesModulosForm({ initialData, onSubmit, onCancel, loading 
 
   return (
     <FormX ref={formRef} onSubmit={handleSubmit} validateOn="blur">
-      <div style={ { display: 'flex', flexDirection: 'column', gap: 16 } }>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
         {/* InputX - Nombre */}
         <InputX
           type="text"
           name="nombre"
           label="Nombre"
           placeholder="Ingrese nombre"
-          helperText="Campo nombre"
-          defaultValue={ initialData?.nombre }
-          rules={ {
+          //helperText="Campo nombre"
+          defaultValue={initialData?.nombre}
+          rules={{
             validations: [
               { type: 'maxLength', value: 255, message: '' },
+              { type: "required", message: "El correo es obligatorio" },
             ],
-          } }
+          }}
         />
 
         {/* InputX - Descripcion */}
@@ -74,34 +61,39 @@ export function TemplatesModulosForm({ initialData, onSubmit, onCancel, loading 
           name="descripcion"
           label="Descripcion"
           placeholder="Ingrese descripcion"
-          helperText="Campo descripcion"
-          defaultValue={ initialData?.descripcion }
+         // helperText="Campo descripcion"
+          defaultValue={initialData?.descripcion}
+          rules={{
+            validations: [
+              { type: "required", message: "El correo es obligatorio" },
+            ],
+          }}
         />
 
         {/* InputX - Contenido Hbs */}
-        <InputX
+        {/* <InputX
           type="text"
           name="contenido_hbs"
           label="Contenido Hbs"
           placeholder="Ingrese contenido hbs"
           helperText="Campo contenido_hbs"
-          defaultValue={ initialData?.contenido_hbs }
-          rules={ {
+          defaultValue={initialData?.contenido_hbs}
+          rules={{
             validations: [
               { type: 'maxLength', value: 255, message: '' },
             ],
-          } }
-        />
+          }}
+        /> */}
 
         {/* DynamicFieldsX - Variables Utilizadas */}
-        <DynamicFieldsX
+        {/* <DynamicFieldsX
           name="variables_utilizadas"
           label="Variables Utilizadas"
           helperText="Campo variables_utilizadas"
           contract="none"
-          value={ variables_utilizadasState }
+          value={variables_utilizadasState}
           onChange={setVariablesUtilizadasState}
-        />
+        /> */}
 
       </div>
 

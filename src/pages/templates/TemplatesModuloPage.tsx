@@ -1,9 +1,10 @@
+import { TemplatesModulos } from "../../features/templatesmodulos/TemplatesModulos"
 
 
 function TemplatesModuloPage() {
   return (
    <>
-      kkkk
+      <TemplatesModulos/>
    </>
   )
 }

@@ -74,7 +74,7 @@ export function TemplatesInventarios() {
     onEdit: openEdit,
     onDelete: openDelete,
     onTemplateBuilder: (template) => {
-      navigate(`/template-builder/${template.id}`);
+      navigate(`/template-builder-inventarios/${template.id}`);
     },
   });
 
@@ -83,7 +83,7 @@ export function TemplatesInventarios() {
     <div style={{ padding: 20 }}>
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
-       <h1 className="tituloPrincipal">Templates Inventarios</h1>
+       <h1 className="tituloPrincipal">Plantillas Inventarios</h1>
         <button onClick={openCreate} className="btn btn-success">
           + Nuevo TemplatesInventarios
         </button>

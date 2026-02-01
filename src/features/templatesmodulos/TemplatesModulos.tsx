@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { GridieReact } from '../../lib/gridie-react';
 import type { GridieRef, GridiePageChangeEvent } from '../../lib/gridie-react';
 import { ModalX } from '../../lib/uiX/components/ModalX';
-
+import { useNavigate } from 'react-router-dom';
 import { useTemplatesModulos } from './hooks/useTemplatesModulos';
 import { TemplatesModulosForm } from './components/TemplatesModulosForm';
 import { TemplatesModulosDeleteModal } from './components/TemplatesModulosDeleteModal';
@@ -13,9 +13,9 @@ import './components/TemplatesModulosForm.css';
 
 type ModalMode = 'create' | 'edit' | 'delete' | null;
 
-function TemplatesModulos() {
+export function TemplatesModulos() {
   const gridieRef = useRef<GridieRef>(null);
-
+  const navigate = useNavigate();
   const { templatesModulos, meta, loading, saving, paginated, fetch, create, update, remove } = useTemplatesModulos();
 
   const [modalMode, setModalMode] = useState<ModalMode>(null);
@@ -70,15 +70,20 @@ function TemplatesModulos() {
 
   const gridRows: TemplatesModulosGridRow[] = toTemplatesModulosGridRows(templatesModulos, {
     onEdit: openEdit,
-    onDelete: openDelete,
+      onDelete: openDelete,
+      onTemplateBuilder: (template) => {
+        navigate(`/template-builder-modulos/${template.id}`);
+      },
   });
+
+  
 
   // ========== RENDER ==========
   return (
     <div style={ { padding: 20 } }>
       {/* Header */}
       <div style={ { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 } }>
-        <h1 className="tituloPrincipal">TemplatesModulos</h1>
+        <h1 className="tituloPrincipal">Plantillas Módulos</h1>
         <button onClick={openCreate} className="btn btn-success">
           + Nuevo TemplatesModulos
         </button>

@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
-import { FormX, InputX, SelectX, InputFileX, DynamicFieldsX } from '../../../lib/uiX';
-import type { FormXRef, FormSubmitResult, FieldDefinition } from '../../../lib/uiX';
+import { FormX, InputX, SelectX } from '../../../lib/uiX';
+import type { FormXRef, FormSubmitResult } from '../../../lib/uiX';
 import type { TemplatesInventarios } from '../templatesinventarios.types';
 import './TemplatesInventariosForm.css';
 
@@ -20,24 +20,9 @@ export function TemplatesInventariosForm({ initialData, onSubmit, onCancel, load
   const [tipoSeleccionado, setTipoSeleccionado] = useState<string>(initialData?.tipo || '');
 
   // Función para normalizar variables_utilizadas a array
-  const normalizeVariablesUtilizadas = (value: any): FieldDefinition[] => {
-    if (!value) return [];
-    if (Array.isArray(value)) return value;
-    if (typeof value === 'string') {
-      try {
-        const parsed = JSON.parse(value);
-        return Array.isArray(parsed) ? parsed : [];
-      } catch {
-        return [];
-      }
-    }
-    return [];
-  };
 
-  // Estado para DynamicFieldsX
-  const [variables_utilizadasState, setVariablesUtilizadasState] = useState<FieldDefinition[]>(
-    normalizeVariablesUtilizadas(initialData?.variables_utilizadas)
-  );
+
+
 
   const handleSubmit = (result: FormSubmitResult) => {
     if (!result.general_validation) {
@@ -228,31 +213,6 @@ export function TemplatesInventariosForm({ initialData, onSubmit, onCancel, load
             ],
           }}
         />
-
-        {/* InputX - Contenido Hbs */}
-        {/* <InputX
-          type="text"
-          name="contenido_hbs"
-          label="Contenido Hbs"
-          placeholder="Ingrese contenido hbs"
-          helperText="Campo contenido_hbs"
-          defaultValue={ initialData?.contenido_hbs }
-          rules={ {
-            validations: [
-              { type: 'maxLength', value: 255, message: '' },
-            ],
-          } }
-        /> */}
-
-        {/* DynamicFieldsX - Variables Utilizadas */}
-        {/* <DynamicFieldsX
-          name="variables_utilizadas"
-          label="Variables Utilizadas"
-          helperText="Campo variables_utilizadas"
-          contract="none"
-          value={variables_utilizadasState}
-          onChange={setVariablesUtilizadasState}
-        /> */}
 
       </div>
 
