@@ -35,6 +35,16 @@ export { InputX, type InputXProps } from "./components/InputX";
 export { SelectX, type SelectXProps } from "./components/SelectX";
 export { InputFileX } from "./components/InputFileX";
 export { DynamicFieldsX } from "./components/DynamicFieldsX";
+export { StepperX, useStepperContext } from "./components/StepperX";
+
+// StepperX Types
+export type {
+  StepDefinition,
+  StepStatus,
+  StepperXProps,
+  StepperXRef,
+  StepperContextValue,
+} from "./components/StepperX";
 
 // Utils (for advanced usage)
 export {

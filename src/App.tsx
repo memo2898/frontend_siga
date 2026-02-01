@@ -12,6 +12,7 @@ import UsuariosPage from './pages/usuarios/UsuariosPage';
 import TemplatesInventarioPage from './pages/templates/TemplatesInventarioPage';
 import TemplatesModuloPage from './pages/templates/TemplatesModuloPage';
 import TemplateBuilderPage from './pages/templateBuilderPage/TemplateBuilderPage';
+import EntradaSalida from './pages/entrada_salida/EntradaSalida';
 
 
 const App = () => {
@@ -27,7 +28,13 @@ const App = () => {
       <Route element={<SidebarWrapper />}>
 
         <Route path="/dashboard" element={<h1>Dashboard</h1>} />
-       
+
+
+        {/* PAGINAS DEL INVENTARIO START */}
+        <Route path="/inventario/entrada_salida" element={<EntradaSalida/>} />
+        {/* PAGINAS DEL INVENTARIO END */}
+
+
        {/* PAGINAS DE ORGANIZACION START */}
           <Route path="organizacion/sedes" element={<SedesPage/>} />
           <Route path="organizacion/direcciones" element={<DireccionesPage/>} />

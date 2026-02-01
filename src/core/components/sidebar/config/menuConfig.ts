@@ -37,7 +37,7 @@ export const getMenuConfig = () => {
   return {
     header: {
       title: 'Alcaldía Distrito Nacional',
-      subtitle: 'Panel de Administración'
+      subtitle: 'Sistema Integral de Gestión de Activos'
     },
     mainItems,
     profileItem: {

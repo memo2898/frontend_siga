@@ -193,7 +193,10 @@ export interface TemplateBuilderProps {
   variableGroups?: VariableGroupsMap;
   initialPageSize?: Partial<PageSize>;
   initialTemplate?: Template;
-  onSave?: (template: Template, hbsTemplate: string) => void;
+  /** Callback asíncrono para guardar. Debe retornar una Promise que resuelve cuando se guarda. */
+  onSave?: (template: Template, hbsTemplate: string) => Promise<void> | void;
+  /** Callback para salir del builder (después de guardar o sin guardar) */
+  onExit?: () => void;
   onChange?: (template: Template) => void;
 }
 

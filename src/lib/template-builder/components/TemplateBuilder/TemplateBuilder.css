@@ -24,19 +24,95 @@
   color: #333;
 }
 
-.template-builder__save-btn {
-  padding: 0.5rem 1.5rem;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.2s;
+/* Contenedor de acciones */
+.template-builder__actions {
+  display: flex;
+  gap: 0.75rem;
 }
 
-.template-builder__save-btn:hover {
+/* Estilos base de botones */
+.template-builder__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.25rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 140px;
+}
+
+.template-builder__btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.85;
+}
+
+/* Botón secundario (Guardar) */
+.template-builder__btn--secondary {
+  background-color: #f8f9fa;
+  color: #333;
+  border: 1px solid #dee2e6;
+}
+
+.template-builder__btn--secondary:hover:not(:disabled) {
+  background-color: #e9ecef;
+  border-color: #ced4da;
+}
+
+.template-builder__btn--secondary.success {
+  background-color: #d4edda;
+  border-color: #28a745;
+  color: #155724;
+}
+
+.template-builder__btn--secondary.error {
+  background-color: #f8d7da;
+  border-color: #dc3545;
+  color: #721c24;
+}
+
+/* Botón primario (Guardar y salir) */
+.template-builder__btn--primary {
+  background-color: #007bff;
+  color: white;
+}
+
+.template-builder__btn--primary:hover:not(:disabled) {
   background-color: #0056b3;
+}
+
+.template-builder__btn--primary.success {
+  background-color: #28a745;
+}
+
+.template-builder__btn--primary.error {
+  background-color: #dc3545;
+}
+
+/* Spinner de carga */
+.template-builder__spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Icono de check */
+.template-builder__check {
+  font-size: 1rem;
+  font-weight: bold;
 }
 
 .template-builder__layout {

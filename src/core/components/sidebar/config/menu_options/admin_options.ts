@@ -11,7 +11,20 @@ export const ADMIN_OPTIONS = [
     href: '/dashboard'
   },
 
- 
+ // ============================================
+  // INVENTARIO Y ACTIVOS
+  // ============================================
+  {
+    id: 'inventario',
+    icon: 'fas fa-boxes',
+    text: 'Inventario',
+    submenu: [
+      { text: 'Entrada/Salida', href: '/inventario/entrada_salida', icon: 'fas fa-list' },
+      { text: 'Activos', href: '/inventario/activos', icon: 'fas fa-list' },
+      { text: 'Categorías', href: '/inventario/categorias', icon: 'fas fa-tags' },
+      { text: 'Almacenes', href: '/inventario/almacenes', icon: 'fas fa-warehouse' },
+    ]
+  },
 
   // ============================================
   // GESTIÓN DE PERSONAS
@@ -26,19 +39,7 @@ export const ADMIN_OPTIONS = [
     ]
   },
 
-  // ============================================
-  // INVENTARIO Y ACTIVOS
-  // ============================================
-  {
-    id: 'inventario',
-    icon: 'fas fa-boxes',
-    text: 'Inventario',
-    submenu: [
-      { text: 'Activos', href: '/inventario/activos', icon: 'fas fa-list' },
-      { text: 'Categorías', href: '/inventario/categorias', icon: 'fas fa-tags' },
-      { text: 'Almacenes', href: '/inventario/almacenes', icon: 'fas fa-warehouse' },
-    ]
-  },
+  
 
   // ============================================
   // MÓDULOS DE GESTIÓN DINÁMICA

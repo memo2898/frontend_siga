@@ -1,0 +1,717 @@
+/* ============================================
+   Steps - Estilos compartidos
+   ============================================ */
+
+.step-container {
+  padding: 1rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.step-header {
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.step-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0 0 0.5rem;
+}
+
+.step-description {
+  color: #64748b;
+  margin: 0;
+}
+
+.step-section {
+  margin-bottom: 1.5rem;
+}
+
+.step-label {
+  display: block;
+  font-weight: 500;
+  color: #334155;
+  margin-bottom: 0.75rem;
+}
+
+/* ============================================
+   Radio Cards (para tipo principal)
+   ============================================ */
+
+.radio-group {
+  display: flex;
+  gap: 1rem;
+}
+
+.radio-group-horizontal {
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.radio-group-vertical {
+  flex-direction: column;
+}
+
+.radio-card {
+  flex: 1;
+  min-width: 200px;
+  cursor: pointer;
+}
+
+.radio-card input[type='radio'] {
+  display: none;
+}
+
+.radio-card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.5rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 0.5rem;
+  background: #fff;
+  transition: all 0.2s ease;
+}
+
+.radio-card:hover .radio-card-content {
+  border-color: #cbd5e1;
+  background: #f8fafc;
+}
+
+.radio-card.selected .radio-card-content {
+  border-color: #3b82f6;
+  background: #eff6ff;
+}
+
+.radio-card-icon {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #64748b;
+  margin-bottom: 0.5rem;
+}
+
+.radio-card.selected .radio-card-icon {
+  color: #3b82f6;
+}
+
+.radio-card-label {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.radio-card-description {
+  font-size: 0.875rem;
+  color: #64748b;
+  text-align: center;
+  margin-top: 0.25rem;
+}
+
+/* ============================================
+   Radio Options (para subtipos)
+   ============================================ */
+
+.radio-option {
+  display: flex;
+  align-items: flex-start;
+  padding: 1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.375rem;
+  background: #fff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.radio-option:hover {
+  border-color: #cbd5e1;
+  background: #f8fafc;
+}
+
+.radio-option.selected {
+  border-color: #3b82f6;
+  background: #eff6ff;
+}
+
+.radio-option input[type='radio'] {
+  margin-right: 0.75rem;
+  margin-top: 0.25rem;
+  accent-color: #3b82f6;
+}
+
+.radio-option-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.radio-option-label {
+  font-weight: 500;
+  color: #1e293b;
+}
+
+.radio-option-description {
+  font-size: 0.875rem;
+  color: #64748b;
+  margin-top: 0.125rem;
+}
+
+/* ============================================
+   Errores
+   ============================================ */
+
+.step-errors {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 0.375rem;
+}
+
+.step-error {
+  color: #dc2626;
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+.step-error + .step-error {
+  margin-top: 0.25rem;
+}
+
+/* ============================================
+   Firma Digital
+   ============================================ */
+
+.signature-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.signature-canvas-wrapper {
+  border: 2px dashed #e2e8f0;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  background: #fff;
+}
+
+.signature-canvas-wrapper.has-signature {
+  border-style: solid;
+  border-color: #22c55e;
+}
+
+.signature-canvas {
+  display: block;
+  width: 100%;
+  height: 200px;
+  background: #fff;
+  border-radius: 0.375rem;
+  cursor: crosshair;
+  touch-action: none;
+}
+
+.signature-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+.signature-btn {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.signature-btn-clear {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  color: #64748b;
+}
+
+.signature-btn-clear:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+}
+
+.signature-preview {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: #f8fafc;
+  border-radius: 0.375rem;
+}
+
+.signature-preview-label {
+  font-size: 0.75rem;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+}
+
+.signature-preview-image {
+  max-width: 300px;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.25rem;
+}
+
+/* ============================================
+   Confirmacion / Resumen
+   ============================================ */
+
+.resumen-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.resumen-card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.resumen-card-header {
+  padding: 0.75rem 1rem;
+  background: #f8fafc;
+  border-bottom: 1px solid #e2e8f0;
+  font-weight: 600;
+  color: #334155;
+}
+
+.resumen-card-body {
+  padding: 1rem;
+}
+
+.resumen-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.resumen-row:last-child {
+  border-bottom: none;
+}
+
+.resumen-label {
+  color: #64748b;
+}
+
+.resumen-value {
+  font-weight: 500;
+  color: #1e293b;
+  text-align: right;
+}
+
+.resumen-activos-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.resumen-activo-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.75rem;
+  background: #f8fafc;
+  border-radius: 0.375rem;
+  margin-bottom: 0.5rem;
+}
+
+.resumen-activo-item:last-child {
+  margin-bottom: 0;
+}
+
+.resumen-activo-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.resumen-activo-nombre {
+  font-weight: 500;
+  color: #1e293b;
+}
+
+.resumen-activo-codigo {
+  font-size: 0.875rem;
+  color: #64748b;
+}
+
+.resumen-activo-cantidad {
+  font-weight: 600;
+  color: #3b82f6;
+}
+
+.resumen-imagenes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.resumen-imagen-thumb {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 0.375rem;
+  border: 1px solid #e2e8f0;
+}
+
+.resumen-firma {
+  max-width: 200px;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.375rem;
+}
+
+.resumen-success {
+  padding: 1.5rem;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 0.5rem;
+  text-align: center;
+}
+
+.resumen-success-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.resumen-success-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #166534;
+  margin: 0 0 0.5rem;
+}
+
+.resumen-success-code {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #15803d;
+  margin: 0;
+}
+
+.resumen-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.resumen-btn {
+  padding: 0.75rem 1.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.resumen-btn-primary {
+  background: #3b82f6;
+  border: none;
+  color: #fff;
+}
+
+.resumen-btn-primary:hover {
+  background: #2563eb;
+}
+
+.resumen-btn-secondary {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  color: #64748b;
+}
+
+.resumen-btn-secondary:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+}
+
+/* ============================================
+   Form dentro de steps
+   ============================================ */
+
+.step-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.step-form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.step-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.step-form-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #334155;
+}
+
+.step-form-label.required::after {
+  content: ' *';
+  color: #ef4444;
+}
+
+/* ============================================
+   Activos Lista
+   ============================================ */
+
+.activos-search {
+  margin-bottom: 1rem;
+}
+
+.activos-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-height: 300px;
+  overflow-y: auto;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.375rem;
+  padding: 0.5rem;
+}
+
+.activo-item {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.375rem;
+  background: #fff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.activo-item:hover {
+  border-color: #cbd5e1;
+  background: #f8fafc;
+}
+
+.activo-item.selected {
+  border-color: #3b82f6;
+  background: #eff6ff;
+}
+
+.activo-item-checkbox {
+  margin-right: 0.75rem;
+  accent-color: #3b82f6;
+}
+
+.activo-item-info {
+  flex: 1;
+}
+
+.activo-item-nombre {
+  font-weight: 500;
+  color: #1e293b;
+}
+
+.activo-item-meta {
+  font-size: 0.875rem;
+  color: #64748b;
+}
+
+.activo-item-cantidad {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.activo-item-cantidad input {
+  width: 80px;
+  padding: 0.375rem 0.5rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.25rem;
+  text-align: center;
+}
+
+.activos-seleccionados {
+  margin-top: 1rem;
+}
+
+.activos-seleccionados-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.activos-seleccionados-title {
+  font-weight: 500;
+  color: #334155;
+}
+
+.activos-seleccionados-count {
+  font-size: 0.875rem;
+  color: #64748b;
+}
+
+/* ============================================
+   Evidencia / Fotos
+   ============================================ */
+
+.evidencia-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.evidencia-skip {
+  text-align: center;
+  padding: 1rem;
+  background: #f8fafc;
+  border-radius: 0.375rem;
+}
+
+.evidencia-skip-text {
+  color: #64748b;
+  margin-bottom: 0.5rem;
+}
+
+.evidencia-preview {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.evidencia-preview-item {
+  position: relative;
+  border-radius: 0.375rem;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+}
+
+.evidencia-preview-image {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+}
+
+.evidencia-preview-remove {
+  position: absolute;
+  top: 0.25rem;
+  right: 0.25rem;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.875rem;
+}
+
+.evidencia-preview-remove:hover {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+/* ============================================
+   Persona
+   ============================================ */
+
+.persona-search-results {
+  border: 1px solid #e2e8f0;
+  border-radius: 0.375rem;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.persona-result-item {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #f1f5f9;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.persona-result-item:last-child {
+  border-bottom: none;
+}
+
+.persona-result-item:hover {
+  background: #f8fafc;
+}
+
+.persona-result-item.selected {
+  background: #eff6ff;
+}
+
+.persona-result-info {
+  flex: 1;
+}
+
+.persona-result-nombre {
+  font-weight: 500;
+  color: #1e293b;
+}
+
+.persona-result-documento {
+  font-size: 0.875rem;
+  color: #64748b;
+}
+
+.persona-selected {
+  padding: 1rem;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 0.375rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.persona-selected-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.persona-selected-nombre {
+  font-weight: 600;
+  color: #166534;
+}
+
+.persona-selected-documento {
+  font-size: 0.875rem;
+  color: #15803d;
+}
+
+.persona-selected-change {
+  font-size: 0.875rem;
+  color: #3b82f6;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.persona-form-toggle {
+  text-align: center;
+  padding: 1rem;
+}
+
+.persona-form-toggle-btn {
+  background: none;
+  border: none;
+  color: #3b82f6;
+  cursor: pointer;
+  text-decoration: underline;
+  font-size: 0.875rem;
+}

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams ,useNavigate} from "react-router-dom";
 import { TemplateBuilder } from "../../lib/template-builder"
 import type { Template, TemplateElement, ImageProperties, VariableGroupsMap } from "../../lib/template-builder/types/template.types";
 import { createDefaultPageSize, createEmptyPage, generateId } from "../../lib/template-builder/utils/helpers";
@@ -27,7 +27,7 @@ function normalizeTemplate(data: Partial<Template>): Template {
 
 function TemplateBuilderPage() {
     const { id } = useParams<{ id: string }>(); // Captura el ID de la URL
-   // const navigate = useNavigate();
+   const navigate = useNavigate();
     
     const [initialTemplate, setInitialTemplate] = useState<Template | undefined>(undefined);
     const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -258,11 +258,16 @@ const variableGroups: VariableGroupsMap = {
     return <TemplateBuilderSkeleton />;
   }
 
+const handleExit = () => {
+
+    navigate('/templates/inventario'); // O la ruta que necesites
+};
   return (
     <>
     <TemplateBuilder
        variableGroups={variableGroups}
        onSave={handleSave}
+       onExit={handleExit}
        initialTemplate={initialTemplate}
     />
     </>
