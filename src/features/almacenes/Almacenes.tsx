@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { GridieReact } from '../../lib/gridie-react';
 import type { GridieRef, GridiePageChangeEvent } from '../../lib/gridie-react';
 import { ModalX } from '../../lib/uiX/components/ModalX';
@@ -13,8 +14,9 @@ import './components/AlmacenesForm.css';
 
 type ModalMode = 'create' | 'edit' | 'delete' | null;
 
-function Almacenes() {
+export function Almacenes() {
   const gridieRef = useRef<GridieRef>(null);
+  const navigate = useNavigate();
 
   const { almacenes, meta, loading, saving, paginated, fetch, create, update, remove, sedesOptions } = useAlmacenes();
 
@@ -39,6 +41,10 @@ function Almacenes() {
   const openDelete = (almacenes: Almacenes) => {
     setSelectedAlmacenes(almacenes);
     setModalMode('delete');
+  };
+
+  const openDetail = (almacenes: Almacenes) => {
+    navigate(`/inventario/almacenes/detalle/${almacenes.id}`);
   };
 
   const closeModal = () => {
@@ -71,6 +77,7 @@ function Almacenes() {
   const gridRows: AlmacenesGridRow[] = toAlmacenesGridRows(almacenes, {
     onEdit: openEdit,
     onDelete: openDelete,
+    onDetail: openDetail,
   });
 
   // ========== RENDER ==========

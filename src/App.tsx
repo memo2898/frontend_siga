@@ -15,6 +15,8 @@ import TemplateBuilderPage from './pages/templateBuilderPage/TemplateBuilderPage
 import EntradaSalida from './pages/entrada_salida/EntradaSalida';
 import ActivosPage from './pages/activos/ActivosPage';
 import CategoriasPage from './pages/categorias/CategoriasPage';
+import AlmacenesPage from './pages/almacenes/AlmacenesPage';
+import AlmacenDetallePage from './pages/almacenes/AlmacenDetallePage';
 
 
 const App = () => {
@@ -37,6 +39,8 @@ const App = () => {
         <Route path="/inventario/entrada_salida" element={<EntradaSalida/>} />
         <Route path="/inventario/activos" element={<ActivosPage/>} />
         <Route path="/inventario/categorias" element={<CategoriasPage/>} />
+        <Route path="/inventario/almacenes" element={<AlmacenesPage/>} />
+        <Route path="/inventario/almacenes/detalle/:id" element={<AlmacenDetallePage/>} />
         {/* PAGINAS DEL INVENTARIO END */}
 
 

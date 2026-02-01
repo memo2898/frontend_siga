@@ -1,6 +1,6 @@
 import { http } from '../../http';
 import { SERVER_ROUTE } from '../../config';
-import type { Almacenes, AlmacenesCreateDTO, AlmacenesUpdateDTO, AlmacenesFilters, PaginatedResponse } from './almacenes.types';
+import type { Almacenes, AlmacenesCreateDTO, AlmacenesUpdateDTO, AlmacenesFilters, PaginatedResponse, AlmacenesDetalleFilters, AlmacenesDetalleResponse } from './almacenes.types';
 
 const BASE = `${SERVER_ROUTE}/api/almacenes`;
 
@@ -56,21 +56,26 @@ export const remove = async (id: number, softDelete = IS_SOFT_DELETE) => {
 export const getPaginated = async (filters: AlmacenesFilters = {}) => {
   const query = buildQuery(filters);
   const response = await http.get<PaginatedResponse<Almacenes>>(`${BASE}/paginated?${query}`);
-  
+
   // Si no se especificó un estado en los filtros, filtramos los estados excluidos
   if (!filters.estado) {
-    const filteredData = response.data.filter(element => 
+    const filteredData = response.data.filter(element =>
       !EXCLUDED_STATES.includes(element.estado as string)
     );
-    
+
     return {
       ...response,
       data: filteredData,
       total: filteredData.length,
     };
   }
-  
+
   return response;
+};
+
+export const getDetalle = async (id: number, filters: AlmacenesDetalleFilters = {}) => {
+  const query = buildQuery(filters);
+  return await http.get<AlmacenesDetalleResponse>(`${BASE}/${id}/detalle?${query}`);
 };
 
 const buildQuery = (params: object) => {

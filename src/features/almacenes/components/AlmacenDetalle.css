@@ -1,0 +1,244 @@
+.almacen-detalle {
+  padding: 1.5rem;
+}
+
+.almacen-detalle-loading,
+.almacen-detalle-error,
+.almacen-detalle-empty {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+  font-size: 1.1rem;
+}
+
+.almacen-detalle-error {
+  color: var(--color-error, #dc3545);
+}
+
+.almacen-detalle-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.almacen-detalle-header h1 {
+  margin: 0;
+  font-size: 1.75rem;
+}
+
+.estado-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.estado-activo {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+.estado-inactivo {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+.almacen-detalle-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.almacen-info-card {
+  background: var(--color-surface, #fff);
+  border-radius: 8px;
+  padding: 1.25rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.almacen-info-card h2 {
+  margin: 0 0 1rem 0;
+  font-size: 1.1rem;
+  color: var(--color-text-secondary, #6b7280);
+  border-bottom: 1px solid var(--color-border, #e5e7eb);
+  padding-bottom: 0.5rem;
+}
+
+.almacen-info-card dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.5rem 1rem;
+  margin: 0;
+}
+
+.almacen-info-card dt {
+  font-weight: 500;
+  color: var(--color-text-secondary, #6b7280);
+}
+
+.almacen-info-card dd {
+  margin: 0;
+}
+
+.almacen-info-card.estadisticas {
+  grid-column: 1 / -1;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.75rem;
+  background: var(--color-background, #f9fafb);
+  border-radius: 6px;
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--color-primary, #2563eb);
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary, #6b7280);
+  text-align: center;
+}
+
+.stats-summary {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.stats-summary .stat-item {
+  flex: 1;
+  min-width: 150px;
+}
+
+.stat-item.highlight .stat-value {
+  color: var(--color-success, #059669);
+}
+
+.stat-item.warning {
+  background: #fef3c7;
+}
+
+.stat-item.warning .stat-value {
+  color: #d97706;
+}
+
+/* Sección de activos */
+.almacen-activos-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.activos-table-card {
+  overflow: hidden;
+}
+
+.activos-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.activos-table th,
+.activos-table td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid var(--color-border, #e5e7eb);
+}
+
+.activos-table th {
+  background: var(--color-background, #f9fafb);
+  font-weight: 600;
+  color: var(--color-text-secondary, #6b7280);
+}
+
+.activos-table tbody tr:hover {
+  background: var(--color-background, #f9fafb);
+}
+
+.activos-table .estado-badge {
+  font-size: 0.75rem;
+  padding: 0.2rem 0.5rem;
+}
+
+.estado-disponible {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+.estado-asignado {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+
+.estado-prestado {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+.estado-en-mantenimiento {
+  background-color: #fce7f3;
+  color: #9d174d;
+}
+
+.estado-descargado {
+  background-color: #e5e7eb;
+  color: #374151;
+}
+
+.activos-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 0 0;
+  margin-top: 0.5rem;
+  border-top: 1px solid var(--color-border, #e5e7eb);
+}
+
+.activos-pagination button {
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--color-border, #e5e7eb);
+  background: var(--color-surface, #fff);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+.activos-pagination button:hover:not(:disabled) {
+  background: var(--color-background, #f9fafb);
+}
+
+.activos-pagination button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.activos-pagination span {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary, #6b7280);
+}
+
+.no-data {
+  text-align: center;
+  color: var(--color-text-secondary, #6b7280);
+  padding: 2rem;
+  margin: 0;
+}

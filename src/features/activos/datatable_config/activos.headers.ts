@@ -1,12 +1,12 @@
 import type { GridieHeaderConfig } from '../../../lib/gridie-react';
 
 export const activosHeaders: GridieHeaderConfig[] = [
-  {
-    label: 'Id',
-    type: 'number',
-    sortable: true,
-    width: '80px',
-  },
+  // {
+  //   label: 'Id',
+  //   type: 'number',
+  //   sortable: true,
+  //   width: '80px',
+  // },
   {
     label: 'Codigo Inventario Local',
     type: 'string',

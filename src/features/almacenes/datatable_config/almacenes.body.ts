@@ -3,6 +3,7 @@ import type { Almacenes, AlmacenesGridRow } from '../almacenes.types';
 export interface AlmacenesHandlers {
   onEdit: (almacenes: Almacenes) => void;
   onDelete: (almacenes: Almacenes) => void;
+  onDetail: (almacenes: Almacenes) => void;
 }
 
 // Estilos inline para los botones de acción
@@ -40,6 +41,21 @@ const actionButtonStyles = `
 
     .btn-action svg {
       flex-shrink: 0;
+    }
+
+    .btn-detail {
+      color: #059669;
+      border-color: #d1fae5;
+      background: #ecfdf5;
+    }
+
+    .btn-detail:hover {
+      background: #d1fae5;
+      border-color: #a7f3d0;
+    }
+
+    .btn-detail:active {
+      background: #a7f3d0;
     }
 
     .btn-edit {
@@ -99,6 +115,19 @@ export const toAlmacenesGridRow = (almacenes: Almacenes, handlers: AlmacenesHand
     {
       content: `
         ${actionButtonStyles}
+        <button class="btn-action btn-detail" title="Ver Detalle">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+          <span>Detalle</span>
+        </button>
+      `,
+      event: 'click',
+      funct: () => handlers.onDetail(almacenes),
+    },
+    {
+      content: `
         <button class="btn-action btn-edit" title="Editar">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>

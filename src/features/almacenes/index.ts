@@ -1,2 +1,4 @@
 export { default as Almacenes } from './Almacenes';
-export * from './almacenes.types';
+export { default as AlmacenDetalle } from './components/AlmacenDetalle';
+export { useAlmacenDetalle } from './hooks/useAlmacenDetalle';
+export type * from './almacenes.types';

@@ -69,3 +69,53 @@ export interface GridieActionCell {
   event: string;
   funct: () => void;
 }
+
+export interface AlmacenesDetalleFilters {
+  cantidadLimit?: number;
+  cantidadPage?: number;
+  unitariosLimit?: number;
+  unitariosPage?: number;
+}
+
+export interface ActivoDetalle {
+  id: number;
+  codigo_inventario_local: string;
+  codigo_inventario_control_bienes?: string;
+  marca?: string;
+  modelo?: string;
+  estado_activo: string;
+  cantidad?: number;
+  unidad_medida?: string;
+  fecha_ingreso?: string;
+  observaciones?: string;
+}
+
+export interface AlmacenesDetalleResponse {
+  almacen: {
+    id: number;
+    nombre: string;
+    ubicacion: string;
+    estado: string;
+    agregado_en: string;
+    actualizado_en: string | null;
+  };
+  sede: {
+    id: number;
+    nombre: string;
+    direccion_fisica: string;
+  };
+  estadisticas: {
+    totalActivos: number;
+    activosDisponibles: number;
+    activosAsignados: number;
+    activosPrestados: number;
+    activosMantenimiento: number;
+    activosDescargados: number;
+    valorTotal: number;
+    categorias: unknown[];
+    alertasStockBajo: number;
+  };
+  ultimosMovimientos: unknown[];
+  activosUnitarios: PaginatedResponse<ActivoDetalle>;
+  activosCantidad: PaginatedResponse<ActivoDetalle>;
+}
