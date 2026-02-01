@@ -13,7 +13,7 @@ import './components/ActivosForm.css';
 
 type ModalMode = 'create' | 'edit' | 'delete' | null;
 
-function Activos() {
+export function Activos() {
   const gridieRef = useRef<GridieRef>(null);
 
   const { activos, meta, loading, saving, paginated, fetch, create, update, remove, categoriasOptions, almacenesOptions } = useActivos();
