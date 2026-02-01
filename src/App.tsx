@@ -17,6 +17,10 @@ import ActivosPage from './pages/activos/ActivosPage';
 import CategoriasPage from './pages/categorias/CategoriasPage';
 import AlmacenesPage from './pages/almacenes/AlmacenesPage';
 import AlmacenDetallePage from './pages/almacenes/AlmacenDetallePage';
+import PersonasPage from './pages/personas/PersonasPage';
+import TiposDocumentosPage from './pages/tiposDocumentos/TiposDocumentosPage';
+import ModulosPage from './pages/modulos/ModulosPage';
+import TransaccionesPage from './pages/transacciones/TransaccionesPage';
 
 
 const App = () => {
@@ -25,10 +29,10 @@ const App = () => {
       {/* Rutas públicas */}
       <Route path="/" element={<Login />} />
       <Route path="/login" element={<Login />} />
-      <Route path="/lobby" element={<Lobby/>} /> {/* Elegirems el perfil con el que se logueará el usuario */}
+      <Route path="/lobby" element={<Lobby />} /> {/* Elegirems el perfil con el que se logueará el usuario */}
 
-      <Route path="template-builder-inventarios/:id" element={<TemplateBuilderPage builderType ='inventario'/>} />
-      <Route path="template-builder-modulos/:id" element={<TemplateBuilderPage builderType ='modulos'/>} />
+      <Route path="template-builder-inventarios/:id" element={<TemplateBuilderPage builderType='inventario' />} />
+      <Route path="template-builder-modulos/:id" element={<TemplateBuilderPage builderType='modulos' />} />
       {/* Rutas con Sidebar */}
       <Route element={<SidebarWrapper />}>
 
@@ -36,26 +40,34 @@ const App = () => {
 
 
         {/* PAGINAS DEL INVENTARIO START */}
-        <Route path="/inventario/entrada_salida" element={<EntradaSalida/>} />
-        <Route path="/inventario/activos" element={<ActivosPage/>} />
-        <Route path="/inventario/categorias" element={<CategoriasPage/>} />
-        <Route path="/inventario/almacenes" element={<AlmacenesPage/>} />
-        <Route path="/inventario/almacenes/detalle/:id" element={<AlmacenDetallePage/>} />
+        <Route path="/inventario/entrada_salida" element={<EntradaSalida />} />
+        <Route path="/inventario/activos" element={<ActivosPage />} />
+        <Route path="/inventario/categorias" element={<CategoriasPage />} />
+        <Route path="/inventario/almacenes" element={<AlmacenesPage />} />
+        <Route path="/inventario/almacenes/detalle/:id" element={<AlmacenDetallePage />} />
         {/* PAGINAS DEL INVENTARIO END */}
 
 
-       {/* PAGINAS DE ORGANIZACION START */}
-          <Route path="organizacion/sedes" element={<SedesPage/>} />
-          <Route path="organizacion/direcciones" element={<DireccionesPage/>} />
-          <Route path="organizacion/departamentos" element={<DepartamentosPage/>} />
-       {/* PAGINAS DE ORGANIZACION END */}
+        {/* PAGINAS DE ORGANIZACION START */}
+        <Route path="organizacion/sedes" element={<SedesPage />} />
+        <Route path="organizacion/direcciones" element={<DireccionesPage />} />
+        <Route path="organizacion/departamentos" element={<DepartamentosPage />} />
+        {/* PAGINAS DE ORGANIZACION END */}
 
-     
-     
-          <Route path="usuarios" element={<UsuariosPage/>} />
-          <Route path="templates/inventario" element={<TemplatesInventarioPage/>} />
-          <Route path="templates/modulos" element={<TemplatesModuloPage/>} />
-         
+
+        {/* PAGINAS DE PERSONAS START */}
+        <Route path="personas/gestion" element={<PersonasPage />} />
+        <Route path="personas/tipos-documentos" element={<TiposDocumentosPage />} />
+        {/* PAGINAS DE PERSONAS END */}
+
+        <Route path="modulos" element={<ModulosPage />} />
+        <Route path="transacciones" element={<TransaccionesPage />} />
+
+
+        <Route path="usuarios" element={<UsuariosPage />} />
+        <Route path="templates/inventario" element={<TemplatesInventarioPage />} />
+        <Route path="templates/modulos" element={<TemplatesModuloPage />} />
+
 
 
       </Route>

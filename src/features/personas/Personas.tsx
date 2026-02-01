@@ -13,7 +13,7 @@ import './components/PersonasForm.css';
 
 type ModalMode = 'create' | 'edit' | 'delete' | null;
 
-function Personas() {
+export function Personas() {
   const gridieRef = useRef<GridieRef>(null);
 
   const { personas, meta, loading, saving, paginated, fetch, create, update, remove, departamentosOptions } = usePersonas();

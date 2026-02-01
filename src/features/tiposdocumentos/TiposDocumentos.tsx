@@ -13,7 +13,7 @@ import './components/TiposDocumentosForm.css';
 
 type ModalMode = 'create' | 'edit' | 'delete' | null;
 
-function TiposDocumentos() {
+export function TiposDocumentos() {
   const gridieRef = useRef<GridieRef>(null);
 
   const { tiposDocumentos, meta, loading, saving, paginated, fetch, create, update, remove } = useTiposDocumentos();

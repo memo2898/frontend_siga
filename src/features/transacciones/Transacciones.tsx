@@ -13,7 +13,7 @@ import './components/TransaccionesForm.css';
 
 type ModalMode = 'create' | 'edit' | 'delete' | null;
 
-function Transacciones() {
+export function Transacciones() {
   const gridieRef = useRef<GridieRef>(null);
 
   const { transacciones, meta, loading, saving, paginated, fetch, create, update, remove, modulosOptions, personasOptions, usuariosOptions, rolesOptions } = useTransacciones();

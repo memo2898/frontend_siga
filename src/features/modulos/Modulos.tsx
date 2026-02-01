@@ -13,7 +13,7 @@ import './components/ModulosForm.css';
 
 type ModalMode = 'create' | 'edit' | 'delete' | null;
 
-function Modulos() {
+export function Modulos() {
   const gridieRef = useRef<GridieRef>(null);
 
   const { modulos, meta, loading, saving, paginated, fetch, create, update, remove } = useModulos();

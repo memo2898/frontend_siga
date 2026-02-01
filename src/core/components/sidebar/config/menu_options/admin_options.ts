@@ -34,7 +34,7 @@ export const ADMIN_OPTIONS = [
     icon: 'fas fa-users',
     text: 'Personas',
     submenu: [
-      { text: 'Gestión de Personas', href: '/personas', icon: 'fas fa-users' },
+      { text: 'Gestión de Personas', href: '/personas/gestion', icon: 'fas fa-users' },
       { text: 'Tipos de Documentos', href: '/personas/tipos-documentos', icon: 'fas fa-id-card' },
     ]
   },
@@ -44,58 +44,55 @@ export const ADMIN_OPTIONS = [
   // ============================================
   // MÓDULOS DE GESTIÓN DINÁMICA
   // ============================================
-  {
+    {
     id: 'modulos',
     icon: 'fas fa-th-large',
-    text: 'Módulos',
-    submenu: [
-      { 
-        text: 'Ver Módulos', 
-        href: '/modulos', 
-        icon: 'fas fa-eye',
-        description: 'Visualizar y usar módulos activos'
-      },
-      { 
-        text: 'Gestión de Módulos', 
-        href: '/modulos/gestion', 
-        icon: 'fas fa-cogs',
-        description: 'Crear, editar y configurar módulos'
-      },
-    ]
+    text: 'Modulos',
+    active: true,
+    href: '/modulos'
   },
+ 
 
   // ============================================
   // TRANSACCIONES
   // ============================================
-  {
+
+   {
     id: 'transacciones',
     icon: 'fas fa-exchange-alt',
     text: 'Transacciones',
-    submenu: [
-      { text: 'Todas las Transacciones', href: '/transacciones', icon: 'fas fa-list' },
-      { 
-        text: 'Entradas', 
-        href: '/transacciones/entradas', 
-        icon: 'fas fa-arrow-down',
-      },
-      { 
-        text: 'Salidas', 
-        href: '/transacciones/salidas', 
-        icon: 'fas fa-arrow-up',
-        submenu: [
-          { text: 'Asignaciones', href: '/transacciones/salidas/asignaciones' },
-          { text: 'Préstamos', href: '/transacciones/salidas/prestamos' },
-          { text: 'Descargos', href: '/transacciones/salidas/descargos' },
-        ]
-      },
-      { 
-        text: 'Devoluciones', 
-        href: '/transacciones/devoluciones', 
-        icon: 'fas fa-undo',
-      },
-      { text: 'Pendientes de Devolución', href: '/transacciones/pendientes', icon: 'fas fa-clock' },
-    ]
+    active: true,
+    href: '/transacciones'
   },
+  // {
+  //   id: 'transacciones',
+  //   icon: 'fas fa-exchange-alt',
+  //   text: 'Transacciones',
+  //   submenu: [
+  //     { text: 'Todas las Transacciones', href: '/transacciones', icon: 'fas fa-list' },
+  //     { 
+  //       text: 'Entradas', 
+  //       href: '/transacciones/entradas', 
+  //       icon: 'fas fa-arrow-down',
+  //     },
+  //     { 
+  //       text: 'Salidas', 
+  //       href: '/transacciones/salidas', 
+  //       icon: 'fas fa-arrow-up',
+  //       submenu: [
+  //         { text: 'Asignaciones', href: '/transacciones/salidas/asignaciones' },
+  //         { text: 'Préstamos', href: '/transacciones/salidas/prestamos' },
+  //         { text: 'Descargos', href: '/transacciones/salidas/descargos' },
+  //       ]
+  //     },
+  //     { 
+  //       text: 'Devoluciones', 
+  //       href: '/transacciones/devoluciones', 
+  //       icon: 'fas fa-undo',
+  //     },
+  //     { text: 'Pendientes de Devolución', href: '/transacciones/pendientes', icon: 'fas fa-clock' },
+  //   ]
+  // },
 
  
 
