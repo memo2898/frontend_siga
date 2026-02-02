@@ -26,7 +26,8 @@ export interface SelectXProps {
   label?: string;
   placeholder?: string;
   options: SelectXOption[];
-  defaultValue?: string | number | null; // NUEVO
+  value?: string | number | null; // CAMBIADO de defaultValue a value
+  defaultValue?: string | number | null;
   rules?: InputRules;
   validateOn?: ValidateOn;
   helperText?: string;
@@ -43,7 +44,8 @@ export const SelectX: React.FC<SelectXProps> = ({
   label,
   placeholder = "Seleccionar...",
   options,
-  defaultValue, // NUEVO
+  value, // NUEVO: para modo controlado
+  defaultValue, // Mantener para compatibilidad
   rules = {},
   validateOn: inputValidateOn,
   helperText,
@@ -56,23 +58,25 @@ export const SelectX: React.FC<SelectXProps> = ({
 }) => {
   const formContext = useFormXContext();
   
-  // Inicializar con defaultValue si existe
+  // Determinar el valor inicial (priorizar value sobre defaultValue)
+  const initialValue = value !== undefined ? value : defaultValue;
+  
+  // Inicializar con el valor inicial
   const [searchText, setSearchText] = useState(() => {
-    if (defaultValue !== undefined && defaultValue !== null) {
-      const defaultOption = options.find(opt => opt.value === defaultValue);
-      return defaultOption ? defaultOption.label : "";
+    if (initialValue !== undefined && initialValue !== null) {
+      const initialOption = options.find(opt => opt.value === initialValue);
+      return initialOption ? initialOption.label : "";
     }
     return "";
   });
   
   const [selectedOption, setSelectedOption] = useState<SelectXOption | null>(() => {
-    if (defaultValue !== undefined && defaultValue !== null) {
-      return options.find(opt => opt.value === defaultValue) || null;
+    if (initialValue !== undefined && initialValue !== null) {
+      return options.find(opt => opt.value === initialValue) || null;
     }
     return null;
   });
 
-  const [prevDefaultValue, setPrevDefaultValue] = useState(defaultValue);
   const [isOpen, setIsOpen] = useState(false);
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
   const [errors, setErrors] = useState<string[]>([]);
@@ -83,23 +87,24 @@ export const SelectX: React.FC<SelectXProps> = ({
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Sincronizar con defaultValue cuando cambia (para modo edición)
-  if (defaultValue !== prevDefaultValue) {
-    if (defaultValue !== undefined && defaultValue !== null) {
-      const defaultOption = options.find(opt => opt.value === defaultValue);
-      if (defaultOption) {
-        setSelectedOption(defaultOption);
-        setSearchText(defaultOption.label);
+  // Sincronizar con value cuando cambia (para modo controlado)
+  useEffect(() => {
+    if (value !== undefined) {
+      if (value !== null) {
+        const valueOption = options.find(opt => opt.value === value);
+        if (valueOption) {
+          setSelectedOption(valueOption);
+          setSearchText(valueOption.label);
+        } else {
+          setSelectedOption(null);
+          setSearchText("");
+        }
       } else {
         setSelectedOption(null);
         setSearchText("");
       }
-    } else {
-      setSelectedOption(null);
-      setSearchText("");
     }
-    setPrevDefaultValue(defaultValue);
-  }
+  }, [value, options]);
 
   // Determine validateOn
   const effectiveValidateOn = inputValidateOn ?? formContext?.validateOn ?? "blur";
@@ -128,13 +133,13 @@ export const SelectX: React.FC<SelectXProps> = ({
 
   // Validate
   const validateCurrentValue = useCallback((): FieldValidationResult => {
-    const value = getCurrentValue();
+    const currentValue = getCurrentValue();
     
     if (!rules.validations || rules.validations.length === 0) {
-      return { name, value, isValid: true, errors: [] };
+      return { name, value: currentValue, isValid: true, errors: [] };
     }
 
-    return validateField(name, value, rules.validations);
+    return validateField(name, currentValue, rules.validations);
   }, [name, getCurrentValue, rules.validations]);
 
   // Handle validation trigger
@@ -198,8 +203,8 @@ export const SelectX: React.FC<SelectXProps> = ({
 
   // Handle input change
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setSearchText(value);
+    const inputValue = e.target.value;
+    setSearchText(inputValue);
     setSelectedOption(null);
     setHighlightedIndex(-1);
     
@@ -208,7 +213,7 @@ export const SelectX: React.FC<SelectXProps> = ({
     }
 
     if (allowFreeText) {
-      onChange?.(value || null, null);
+      onChange?.(inputValue || null, null);
     }
   };
 
@@ -219,19 +224,22 @@ export const SelectX: React.FC<SelectXProps> = ({
 
   // Handle input blur
   const handleBlur = () => {
-    setTouched(true);
+    // Delay para permitir que onMouseDown se ejecute primero
+    setTimeout(() => {
+      setTouched(true);
 
-    // If not allowFreeText and no selection, clear the search
-    if (!allowFreeText && !selectedOption) {
-      setSearchText("");
-    }
+      // If not allowFreeText and no selection, clear the search
+      if (!allowFreeText && !selectedOption) {
+        setSearchText("");
+      }
 
-    onBlur?.();
+      onBlur?.();
 
-    // Validate on blur if configured
-    if (effectiveValidateOn === "blur") {
-      setTimeout(() => triggerValidation(), 0);
-    }
+      // Validate on blur if configured
+      if (effectiveValidateOn === "blur") {
+        triggerValidation();
+      }
+    }, 200);
   };
 
   // Handle keyboard navigation
@@ -397,7 +405,7 @@ export const SelectX: React.FC<SelectXProps> = ({
             <button
               type="button"
               className="selectx-clear"
-              onClick={handleClear}
+              onMouseDown={handleClear}
               tabIndex={-1}
               aria-label="Limpiar selección"
             >
@@ -410,7 +418,7 @@ export const SelectX: React.FC<SelectXProps> = ({
 
           <div
             className={`selectx-arrow ${isOpen ? "open" : ""}`}
-            onClick={handleArrowClick}
+            onMouseDown={handleArrowClick}
             aria-label="Abrir lista"
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -437,7 +445,10 @@ export const SelectX: React.FC<SelectXProps> = ({
                   ]
                     .filter(Boolean)
                     .join(" ")}
-                  onClick={() => handleSelect(option)}
+                  onMouseDown={(e) => {
+                    e.preventDefault(); // Prevenir que el input pierda el foco
+                    handleSelect(option);
+                  }}
                   role="option"
                   aria-selected={selectedOption?.value === option.value}
                   aria-disabled={option.disabled}

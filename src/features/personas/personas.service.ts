@@ -66,13 +66,125 @@ export const getPaginated = async (filters: PersonasFilters = {}) => {
     return {
       ...response,
       data: filteredData,
-      total: filteredData.length,
+      meta: {
+        ...response.meta,
+        total: filteredData.length,
+      },
     };
   }
   
   return response;
 };
 
+
+
+/**
+ * Buscar persona por tipo de documento y número de documento
+ * @param tipoDocumentoId - ID del tipo de documento (1=Cédula, 2=Pasaporte, 3=RNC, etc.)
+ * @param numeroDocumento - Número de documento
+ * @returns Persona encontrada o error 404
+ */
+export const getByDocumento = async (tipoDocumentoId: number, numeroDocumento: string) => {
+  return await http.get<Personas>(`${BASE}/documento/${tipoDocumentoId}/${numeroDocumento}`);
+};
+
+/**
+ * Verificar si existe una persona con un documento específico
+ * @param tipoDocumentoId - ID del tipo de documento
+ * @param numeroDocumento - Número de documento
+ * @returns { exists: boolean }
+ */
+export const existsByDocumento = async (tipoDocumentoId: number, numeroDocumento: string) => {
+  return await http.get<{ exists: boolean }>(`${BASE}/existe-documento/${tipoDocumentoId}/${numeroDocumento}`);
+};
+
+/**
+ * Obtener personas por agregado_por (sin paginación)
+ * @param agregadoPor - ID del usuario que agregó los registros
+ */
+export const getByAgregadoPor = async (agregadoPor: number) => {
+  const response = await http.get<Personas[]>(`${BASE}/by-agregado-por/${agregadoPor}`);
+  
+  const data = response.filter(element => 
+    !EXCLUDED_STATES.includes(element.estado as string)
+  );
+  
+  return data;
+};
+
+/**
+ * Obtener personas por actualizado_por (sin paginación)
+ * @param actualizadoPor - ID del usuario que actualizó los registros
+ */
+export const getByActualizadoPor = async (actualizadoPor: number) => {
+  const response = await http.get<Personas[]>(`${BASE}/by-actualizado-por/${actualizadoPor}`);
+  
+  const data = response.filter(element => 
+    !EXCLUDED_STATES.includes(element.estado as string)
+  );
+  
+  return data;
+};
+
+/**
+ * Obtener personas por agregado_por con paginación
+ * @param agregadoPor - ID del usuario que agregó los registros
+ * @param filters - Filtros de paginación (page, limit, sort)
+ */
+export const getAgregadoPorPaginated = async (agregadoPor: number, filters: PersonasFilters = {}) => {
+  const query = buildQuery(filters);
+  const response = await http.get<PaginatedResponse<Personas>>(
+    `${BASE}/by-agregado-por/${agregadoPor}/paginated?${query}`
+  );
+  
+  if (!filters.estado) {
+    const filteredData = response.data.filter(element => 
+      !EXCLUDED_STATES.includes(element.estado as string)
+    );
+    
+    return {
+      ...response,
+      data: filteredData,
+      meta: {
+        ...response.meta,
+        total: filteredData.length,
+      },
+    };
+  }
+  
+  return response;
+};
+
+/**
+ * Obtener personas por actualizado_por con paginación
+ * @param actualizadoPor - ID del usuario que actualizó los registros
+ * @param filters - Filtros de paginación (page, limit, sort)
+ */
+export const getActualizadoPorPaginated = async (actualizadoPor: number, filters: PersonasFilters = {}) => {
+  const query = buildQuery(filters);
+  const response = await http.get<PaginatedResponse<Personas>>(
+    `${BASE}/by-actualizado-por/${actualizadoPor}/paginated?${query}`
+  );
+  
+  if (!filters.estado) {
+    const filteredData = response.data.filter(element => 
+      !EXCLUDED_STATES.includes(element.estado as string)
+    );
+    
+    return {
+      ...response,
+      data: filteredData,
+      meta: {
+        ...response.meta,
+        total: filteredData.length,
+      },
+    };
+  }
+  
+  return response;
+};
+
+// Helper function
 const buildQuery = (params: object) => {
   const query = new URLSearchParams();
   Object.entries(params).forEach(([key, value]) => {
