@@ -715,3 +715,279 @@
   text-decoration: underline;
   font-size: 0.875rem;
 }
+
+/* ============================================
+   Step Activos Layout (2 columnas)
+   ============================================ */
+
+.step-activos-layout {
+  display: flex;
+  gap: 1rem;
+  min-height: 400px;
+}
+
+@media (max-width: 768px) {
+  .step-activos-layout {
+    flex-direction: column;
+  }
+}
+
+.step-activos-placeholder {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
+  color: #94a3b8;
+  text-align: center;
+}
+
+.step-activos-placeholder p {
+  margin-top: 1rem;
+  font-size: 0.875rem;
+}
+
+.step-empty-message {
+  padding: 2rem;
+  text-align: center;
+  color: #64748b;
+  background: #f8fafc;
+  border-radius: 0.375rem;
+}
+
+/* ============================================
+   Evidencia - Fotos por activo (Accordion)
+   ============================================ */
+
+.evidencia-total-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  background: #3b82f6;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 1rem;
+  margin-left: 0.5rem;
+}
+
+.evidencia-activos-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.evidencia-activo-card {
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  background: #fff;
+}
+
+.evidencia-activo-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background: #f8fafc;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.evidencia-activo-header:hover {
+  background: #f1f5f9;
+}
+
+.evidencia-activo-header--expanded {
+  background: #eff6ff;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.evidencia-activo-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.125rem;
+}
+
+.evidencia-activo-nombre {
+  font-weight: 500;
+  color: #1e293b;
+}
+
+.evidencia-activo-codigo {
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+.evidencia-activo-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.evidencia-activo-count {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #3b82f6;
+  padding: 0.125rem 0.5rem;
+  background: #eff6ff;
+  border-radius: 0.25rem;
+}
+
+.evidencia-activo-chevron {
+  color: #64748b;
+  transition: transform 0.2s ease;
+}
+
+.evidencia-activo-chevron--rotated {
+  transform: rotate(180deg);
+}
+
+.evidencia-activo-content {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.evidencia-tipo-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.evidencia-tipo-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #334155;
+}
+
+.evidencia-tipo-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.evidencia-tipo-btn {
+  padding: 0.375rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border: 1px solid #e2e8f0;
+  border-radius: 1rem;
+  background: #fff;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.evidencia-tipo-btn:hover {
+  border-color: #cbd5e1;
+  background: #f8fafc;
+}
+
+.evidencia-tipo-btn--selected {
+  background: #3b82f6;
+  border-color: #3b82f6;
+  color: #fff;
+}
+
+.evidencia-tipo-btn--selected:hover {
+  background: #2563eb;
+  border-color: #2563eb;
+}
+
+.evidencia-upload-section {
+  padding: 0.5rem 0;
+}
+
+.evidencia-preview-section {
+  margin-top: 0.5rem;
+}
+
+.evidencia-preview-image-wrapper {
+  position: relative;
+  width: 100%;
+  height: 120px;
+  overflow: hidden;
+  border-radius: 0.375rem 0.375rem 0 0;
+}
+
+.evidencia-preview-tipo-badge {
+  position: absolute;
+  bottom: 0.25rem;
+  left: 0.25rem;
+  padding: 0.125rem 0.5rem;
+  font-size: 0.625rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  border-radius: 0.25rem;
+}
+
+.evidencia-preview-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  padding: 0.5rem;
+  background: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+}
+
+.evidencia-tipo-select {
+  width: 100%;
+  padding: 0.375rem 0.5rem;
+  font-size: 0.75rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.25rem;
+  background: #fff;
+  color: #334155;
+}
+
+.evidencia-tipo-select:focus {
+  outline: none;
+  border-color: #3b82f6;
+}
+
+.evidencia-descripcion-input {
+  width: 100%;
+  padding: 0.375rem 0.5rem;
+  font-size: 0.75rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.25rem;
+  background: #fff;
+}
+
+.evidencia-descripcion-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+}
+
+.evidencia-descripcion-input::placeholder {
+  color: #94a3b8;
+}
+
+.evidencia-no-fotos {
+  padding: 1.5rem;
+  text-align: center;
+  color: #94a3b8;
+  font-size: 0.875rem;
+  background: #f8fafc;
+  border-radius: 0.375rem;
+}
+
+.evidencia-info-box {
+  padding: 0.75rem 1rem;
+  background: #fefce8;
+  border: 1px solid #fef08a;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  color: #854d0e;
+  margin-top: 1rem;
+}

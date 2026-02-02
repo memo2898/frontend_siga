@@ -4,8 +4,8 @@ import { useStepValidation } from './useStepValidation';
 import type { StepDefinition } from '../../../../lib/uiX';
 import type { Transacciones, TransaccionesCreateDTO } from '../../transacciones.types';
 import * as transaccionesService from '../../transacciones.service';
-import * as transaccionesActivosService from '../../../transaccionesactivos/transaccionesactivos.service';
-import * as transaccionesImagenesService from '../../../transaccionesimagenes/transaccionesimagenes.service';
+import * as transaccionesdetalleService from '../../../transaccionesdetalle/transaccionesdetalle.service';
+import * as transaccionesdetalleimagenesService from '../../../transaccionesdetalleimagenes/transaccionesdetalleimagenes.service';
 import * as activosService from '../../../activos/activos.service';
 import * as personasService from '../../../personas/personas.service';
 
@@ -251,14 +251,21 @@ export function useTransaccionWizard(
 
       const transaccion = await transaccionesService.create(transaccionData);
 
-      // 4. Crear transacciones_activos
+      // 4. Crear transacciones_detalle y mapear por activoId para las imagenes
+      const detallesPorActivo: Map<number, number> = new Map();
+
       for (const item of activosIds) {
-        await transaccionesActivosService.create({
+        const detalle = await transaccionesdetalleService.create({
           transaccion_id: transaccion.id,
           activo_id: item.activoId,
           cantidad: item.cantidad,
           observacion: item.observacion,
         });
+
+        // Guardar el ID del detalle para asociar imagenes despues
+        if (detalle.id) {
+          detallesPorActivo.set(item.activoId, detalle.id);
+        }
 
         // Actualizar estado del activo si es salida
         if (state.tipoTransaccion === 'SALIDA') {
@@ -276,10 +283,14 @@ export function useTransaccionWizard(
       // Por ahora solo guardamos la referencia
       for (let i = 0; i < state.imagenes.length; i++) {
         const imagen = state.imagenes[i];
-        await transaccionesImagenesService.create({
-          transaccion_id: transaccion.id,
-          activo_id: imagen.activoId,
-          momento: state.tipoTransaccion === 'ENTRADA' ? 'ENTRADA' : 'SALIDA',
+        // Obtener el transaccion_detalle_id correspondiente al activo de la imagen
+        const transaccionDetalleId = imagen.activoId
+          ? detallesPorActivo.get(imagen.activoId)
+          : undefined;
+
+        await transaccionesdetalleimagenesService.create({
+          transaccion_detalle_id: transaccionDetalleId,
+          tipo: state.tipoTransaccion === 'ENTRADA' ? 'ENTRADA' : 'SALIDA',
           url: imagen.preview, // En produccion esto seria la URL del servidor
           descripcion: imagen.descripcion,
           orden: i + 1,

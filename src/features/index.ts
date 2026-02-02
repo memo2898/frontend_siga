@@ -19,7 +19,7 @@ export * from './templates';
 export * from './modulos';
 export * from './moduloscategorias';
 export * from './transacciones';
-export * from './transaccionesactivos';
+
 export * from './activosimagenes';
 export * from './transaccionesimagenes';
 export * from './uploads';

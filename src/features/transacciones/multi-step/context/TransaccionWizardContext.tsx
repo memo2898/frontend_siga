@@ -80,6 +80,8 @@ function wizardReducer(
         subtipoSalida: undefined,
         // Limpiar activos al cambiar tipo
         activosSeleccionados: [],
+        // Limpiar imágenes al cambiar tipo
+        imagenes: [],
       };
 
     case 'SET_SUBTIPO_ENTRADA':
@@ -101,11 +103,32 @@ function wizardReducer(
       };
 
     case 'REMOVE_ACTIVO':
+      const indexToRemove = action.payload;
+      
+      // Limpiar URLs de previews de las imágenes del activo eliminado
+      state.imagenes
+        .filter((img) => img.activoIndex === indexToRemove)
+        .forEach((img) => {
+          if (img.preview) {
+            URL.revokeObjectURL(img.preview);
+          }
+        });
+      
       return {
         ...state,
         activosSeleccionados: state.activosSeleccionados.filter(
-          (_, index) => index !== action.payload
+          (_, index) => index !== indexToRemove
         ),
+        // Limpiar imágenes del activo eliminado Y re-indexar las restantes
+        imagenes: state.imagenes
+          .filter((img) => img.activoIndex !== indexToRemove)
+          .map((img) => ({
+            ...img,
+            // Re-indexar: si el activo estaba después del eliminado, restar 1
+            activoIndex: img.activoIndex > indexToRemove 
+              ? img.activoIndex - 1 
+              : img.activoIndex,
+          })),
       };
 
     case 'UPDATE_ACTIVO':
@@ -119,9 +142,18 @@ function wizardReducer(
       };
 
     case 'SET_ACTIVOS':
+      // Si se reemplazan todos los activos, limpiar todas las imágenes
+      const oldImagenes = state.imagenes;
+      oldImagenes.forEach((img) => {
+        if (img.preview) {
+          URL.revokeObjectURL(img.preview);
+        }
+      });
+      
       return {
         ...state,
         activosSeleccionados: action.payload,
+        imagenes: [],
       };
 
     case 'SET_DATOS_ACTA_CB':
@@ -137,6 +169,11 @@ function wizardReducer(
       };
 
     case 'REMOVE_IMAGEN':
+      const imagenToRemove = state.imagenes[action.payload];
+      if (imagenToRemove?.preview) {
+        URL.revokeObjectURL(imagenToRemove.preview);
+      }
+      
       return {
         ...state,
         imagenes: state.imagenes.filter((_, index) => index !== action.payload),
@@ -224,6 +261,13 @@ function wizardReducer(
       };
 
     case 'RESET':
+      // Limpiar todas las URLs de preview antes de resetear
+      state.imagenes.forEach((img) => {
+        if (img.preview) {
+          URL.revokeObjectURL(img.preview);
+        }
+      });
+      
       return {
         ...initialState,
         // Mantener contexto al resetear

@@ -1,4 +1,4 @@
-import React, { useRef, useState, useCallback, useEffect } from 'react';
+import React, { useRef, useState, useCallback, useEffect, useMemo } from 'react';
 import { useFormXContext } from '../FormX/FormX.context';
 import './InputFileX.css';
 
@@ -56,6 +56,7 @@ interface InputFileXProps {
   onChange?: (files: File[]) => void;
   onError?: (errors: string[]) => void;
   value?: File[];
+  showPreview?: boolean; // Nueva prop para controlar si se muestra el preview interno
 }
 
 export const InputFileX: React.FC<InputFileXProps> = ({
@@ -71,12 +72,17 @@ export const InputFileX: React.FC<InputFileXProps> = ({
   onChange,
   onError,
   value: controlledValue,
+  showPreview = true, // Por defecto muestra el preview
 }) => {
   const formContext = useFormXContext();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [files, setFiles] = useState<FileWithPreview[]>([]);
+  const [internalFiles, setInternalFiles] = useState<FileWithPreview[]>([]);
   const [errors, setErrors] = useState<string[]>([]);
   const [isDragging, setIsDragging] = useState(false);
+
+  // Determinar si es controlado o no
+  const isControlled = controlledValue !== undefined;
+  const files = isControlled ? controlledValue : internalFiles;
 
   // Función de validación que se registrará en FormX
   const validate = useCallback((currentFiles: File[]) => {
@@ -98,15 +104,15 @@ export const InputFileX: React.FC<InputFileXProps> = ({
   useEffect(() => {
     if (formContext) {
       formContext.registerField({
-         name,
-  getValue: () => files,
-  validate: () => validate(files),
-  setError: (newErrors: string[]) => {
-    setErrors(newErrors);
-  },
-  clearError: () => {
-    setErrors([]);
-  },
+        name,
+        getValue: () => files,
+        validate: () => validate(files),
+        setError: (newErrors: string[]) => {
+          setErrors(newErrors);
+        },
+        clearError: () => {
+          setErrors([]);
+        },
       });
 
       return () => {
@@ -114,23 +120,6 @@ export const InputFileX: React.FC<InputFileXProps> = ({
       };
     }
   }, [formContext, name, files, validate]);
-
-  // Sincronizar con valor controlado
-  useEffect(() => {
-    if (controlledValue !== undefined) {
-      const filesWithPreview: FileWithPreview[] = controlledValue.map((file) => {
-        const fileWithPreview = file as FileWithPreview;
-        if (!fileWithPreview.id) {
-          fileWithPreview.id = Math.random().toString(36).substring(7);
-        }
-        if (file.type.startsWith('image/') && !fileWithPreview.preview) {
-          fileWithPreview.preview = URL.createObjectURL(file);
-        }
-        return fileWithPreview;
-      });
-      setFiles(filesWithPreview);
-    }
-  }, [controlledValue]);
 
   // Validar archivos
   const validateFiles = useCallback((fileList: File[]): { valid: File[]; errors: string[] } => {
@@ -196,49 +185,60 @@ export const InputFileX: React.FC<InputFileXProps> = ({
       return;
     }
 
-    // Crear previews para imágenes
-    const filesWithPreview: FileWithPreview[] = valid.map((file) => {
-      const fileWithPreview = file as FileWithPreview;
-      fileWithPreview.id = Math.random().toString(36).substring(7);
-
-      if (file.type.startsWith('image/')) {
-        fileWithPreview.preview = URL.createObjectURL(file);
-      }
-
-      return fileWithPreview;
-    });
-
-    const newFiles = multiple ? [...files, ...filesWithPreview] : filesWithPreview;
-    setFiles(newFiles);
     setErrors([]);
 
-    // Notificar cambios
-    onChange?.(newFiles);
-    
-    // Notificar a FormX
-    if (formContext) {
-      formContext.notifyChange(name);
-    }
-  }, [files, multiple, name, onChange, onError, validateFiles, formContext]);
+    // Si es controlado, solo notificar via onChange
+    if (isControlled) {
+      onChange?.(valid);
+    } else {
+      // Si no es controlado, manejar estado interno
+      // Crear previews para imágenes
+      const filesWithPreview: FileWithPreview[] = valid.map((file) => {
+        const fileWithPreview = file as FileWithPreview;
+        fileWithPreview.id = Math.random().toString(36).substring(7);
 
-  // Eliminar archivo
+        if (file.type.startsWith('image/')) {
+          fileWithPreview.preview = URL.createObjectURL(file);
+        }
+
+        return fileWithPreview;
+      });
+
+      const newFiles = multiple ? [...internalFiles, ...filesWithPreview] : filesWithPreview;
+      setInternalFiles(newFiles);
+      onChange?.(newFiles);
+      
+      // Notificar a FormX
+      if (formContext) {
+        formContext.notifyChange(name);
+      }
+    }
+  }, [internalFiles, multiple, name, onChange, onError, validateFiles, formContext, isControlled]);
+
+  // Eliminar archivo - solo para modo no controlado
   const removeFile = useCallback((fileId: string) => {
-    const newFiles = files.filter(f => f.id !== fileId);
+    if (isControlled) {
+      // En modo controlado, esto no debería llamarse
+      console.warn('removeFile called on controlled InputFileX');
+      return;
+    }
+
+    const newFiles = internalFiles.filter(f => f.id !== fileId);
     
     // Limpiar URL de preview
-    const fileToRemove = files.find(f => f.id === fileId);
+    const fileToRemove = internalFiles.find(f => f.id === fileId);
     if (fileToRemove?.preview) {
       URL.revokeObjectURL(fileToRemove.preview);
     }
 
-    setFiles(newFiles);
+    setInternalFiles(newFiles);
     onChange?.(newFiles);
     
     // Notificar a FormX
     if (formContext) {
       formContext.notifyChange(name);
     }
-  }, [files, name, onChange, formContext]);
+  }, [internalFiles, name, onChange, formContext, isControlled]);
 
   // Drag & Drop handlers
   const handleDragEnter = (e: React.DragEvent) => {
@@ -282,16 +282,32 @@ export const InputFileX: React.FC<InputFileXProps> = ({
     e.target.value = '';
   };
 
-  // Cleanup previews on unmount
+  // Cleanup previews on unmount - solo para modo no controlado
   useEffect(() => {
-    return () => {
-      files.forEach(file => {
-        if (file.preview) {
-          URL.revokeObjectURL(file.preview);
-        }
-      });
-    };
-  }, [files]);
+    if (!isControlled) {
+      return () => {
+        internalFiles.forEach(file => {
+          if (file.preview) {
+            URL.revokeObjectURL(file.preview);
+          }
+        });
+      };
+    }
+  }, [internalFiles, isControlled]);
+
+  // Convertir files controlados a FileWithPreview para el preview
+  const filesForPreview = useMemo(() => {
+    if (!isControlled) return internalFiles;
+    
+    return files.map((file) => {
+      const fileWithPreview = file as FileWithPreview;
+      if (!fileWithPreview.id) {
+        fileWithPreview.id = Math.random().toString(36).substring(7);
+      }
+      // No crear previews aquí si es controlado - el componente padre maneja eso
+      return fileWithPreview;
+    });
+  }, [files, internalFiles, isControlled]);
 
   return (
     <div className="inputfilex-container">
@@ -338,10 +354,10 @@ export const InputFileX: React.FC<InputFileXProps> = ({
         </div>
       </div>
 
-      {/* Files Preview */}
-      {files.length > 0 && (
+      {/* Files Preview - Solo mostrar si showPreview es true Y no es controlado */}
+      {showPreview && !isControlled && filesForPreview.length > 0 && (
         <div className="inputfilex-files">
-          {files.map((file) => (
+          {filesForPreview.map((file) => (
             <div key={file.id} className="inputfilex-file">
               <div className="inputfilex-file-preview">
                 {file.preview ? (

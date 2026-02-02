@@ -43,6 +43,17 @@ export type MotivoDescargo =
   | 'PERDIDA'
   | 'OTRO';
 
+export type TipoImagen =
+  | 'PRINCIPAL'
+  | 'FRONTAL'
+  | 'LATERAL'
+  | 'POSTERIOR'
+  | 'DETALLE'
+  | 'NUMERO_SERIE'
+  | 'PLACA_PATRIMONIAL'
+  | 'DAÑO'
+  | 'OTRO';
+
 // ============================================
 // Tipos para el Wizard
 // ============================================
@@ -62,10 +73,10 @@ export interface ImagenEvidencia {
   file: File;
   preview: string;
   descripcion?: string;
-  /** ID del activo al que pertenece la imagen */
-  activoId?: number;
-  /** Momento de la captura */
-  momento?: 'ANTES' | 'DESPUES';
+  /** Índice del activo en activosSeleccionados al que pertenece la imagen */
+  activoIndex: number;
+  /** Tipo de imagen según el ENUM */
+  tipo: TipoImagen;
 }
 
 export interface PersonaTransaccion extends Omit<Personas, 'agregado_por' | 'agregado_en' | 'actualizado_por' | 'actualizado_en' | 'estado'> {
@@ -201,5 +212,17 @@ export const MOTIVOS_DESCARGO: { value: MotivoDescargo; label: string }[] = [
   { value: 'VENTA', label: 'Venta' },
   { value: 'ROBO', label: 'Robo' },
   { value: 'PERDIDA', label: 'Perdida' },
+  { value: 'OTRO', label: 'Otro' },
+];
+
+export const TIPOS_IMAGEN: { value: TipoImagen; label: string }[] = [
+  { value: 'PRINCIPAL', label: 'Principal' },
+  { value: 'FRONTAL', label: 'Frontal' },
+  { value: 'LATERAL', label: 'Lateral' },
+  { value: 'POSTERIOR', label: 'Posterior' },
+  { value: 'DETALLE', label: 'Detalle' },
+  { value: 'NUMERO_SERIE', label: 'Numero de Serie' },
+  { value: 'PLACA_PATRIMONIAL', label: 'Placa Patrimonial' },
+  { value: 'DAÑO', label: 'Dano' },
   { value: 'OTRO', label: 'Otro' },
 ];

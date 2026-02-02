@@ -49,18 +49,7 @@ const validationRules: StepValidationRules = {
           }
         }
       });
-      // Validar datos de acta CB si es ingreso desde Control de Bienes
-      if (state.subtipoEntrada === 'INGRESO_CB') {
-        if (!state.datosActaCB?.actaControlBienes) {
-          errors.push('El numero de acta de Control de Bienes es requerido');
-        }
-        if (!state.datosActaCB?.fechaActa) {
-          errors.push('La fecha del acta es requerida');
-        }
-        if (!state.datosActaCB?.codigoCB) {
-          errors.push('El codigo de Control de Bienes es requerido');
-        }
-      }
+      // ✅ VALIDACIÓN DE datosActaCB ELIMINADA - Ya no se usa
       return errors;
     },
   },

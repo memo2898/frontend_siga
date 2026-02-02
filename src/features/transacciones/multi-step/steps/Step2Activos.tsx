@@ -1,83 +1,156 @@
-import { useState } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { useTransaccionWizardContext } from '../context/TransaccionWizardContext';
-import { useActivosDisponibles } from '../hooks/useActivosDisponibles';
-import { InputX } from '../../../../lib/uiX';
+import { useCategoriasActivos } from '../hooks/useCategoriasActivos';
+import {
+  CategoriasList,
+  ActivosGrid,
+  NuevoActivoForm,
+  ActivosSeleccionados,
+  INITIAL_FORM_DATA,
+} from '../components';
+import type { NuevoActivoFormData } from '../components';
 import type { Activos } from '../../../activos/activos.types';
+import type { Categorias } from '../../../categorias/categorias.types';
 import type { ActivoSeleccionado } from '../types';
 import './Steps.css';
 
 export function Step2Activos() {
   const { state, dispatch, isDevolucion } = useTransaccionWizardContext();
-  const [showForm, setShowForm] = useState(false);
-  const [nuevoActivo, setNuevoActivo] = useState<Partial<Activos>>({});
+  const [showNuevoForm, setShowNuevoForm] = useState(false);
 
-  const { activos, loading, searchTerm, setSearchTerm, error } = useActivosDisponibles({
-    soloDisponibles: state.tipoTransaccion === 'SALIDA',
-    categoriasPermitidas: state.categoriasPermitidas,
-  });
+  // Estado de formularios por categoría (para persistir al cambiar)
+  const [formDataPorCategoria, setFormDataPorCategoria] = useState<Map<number, NuevoActivoFormData>>(
+    new Map()
+  );
+  const [currentFormData, setCurrentFormData] = useState<NuevoActivoFormData>(INITIAL_FORM_DATA);
+  const [formErrors, setFormErrors] = useState<string[]>([]);
 
   const isEntrada = state.tipoTransaccion === 'ENTRADA';
   const isSalida = state.tipoTransaccion === 'SALIDA';
+  const esDevolucion = isDevolucion();
 
-  // Verificar si un activo ya esta seleccionado
-  const isSelected = (activoId: number | undefined) => {
-    if (!activoId) return false;
-    return state.activosSeleccionados.some((item) => item.activo.id === activoId);
+  // Hook para categorías y activos
+  const {
+    categorias,
+    categoriasLoading,
+    categoriaSeleccionada,
+    selectCategoria: selectCategoriaBase,
+    activos,
+    activosLoading,
+    activosError,
+    searchTerm,
+    setSearchTerm,
+    getActivosCountByCategoria,
+  } = useCategoriasActivos({
+    subtipoSalida: state.subtipoSalida,
+    categoriasPermitidas: state.categoriasPermitidas,
+  });
+
+  // Función para cambiar de categoría guardando el estado del formulario
+  const handleSelectCategoria = useCallback(
+    (nuevaCategoria: Categorias | null) => {
+      // Guardar estado actual si hay categoría seleccionada y el formulario tiene datos
+      if (categoriaSeleccionada?.id && isEntrada) {
+        const tieneData =
+          currentFormData.marca ||
+          currentFormData.modelo ||
+          currentFormData.codigo_inventario_local ||
+          Object.keys(currentFormData.atributos).length > 0;
+
+        if (tieneData) {
+          setFormDataPorCategoria((prev) => {
+            const newMap = new Map(prev);
+            newMap.set(categoriaSeleccionada.id!, { ...currentFormData });
+            return newMap;
+          });
+        }
+      }
+
+      // Cargar estado guardado de la nueva categoría o resetear
+      if (nuevaCategoria?.id) {
+        const savedData = formDataPorCategoria.get(nuevaCategoria.id);
+        setCurrentFormData(savedData || INITIAL_FORM_DATA);
+      } else {
+        setCurrentFormData(INITIAL_FORM_DATA);
+      }
+
+      setFormErrors([]);
+      selectCategoriaBase(nuevaCategoria);
+    },
+    [categoriaSeleccionada, currentFormData, formDataPorCategoria, isEntrada, selectCategoriaBase]
+  );
+
+  // Set de IDs seleccionados para búsqueda rápida
+  const selectedIds = useMemo<Set<number>>(() => {
+    return new Set<number>(
+      state.activosSeleccionados
+        .filter((item) => item.activo.id !== undefined)
+        .map((item) => item.activo.id as number)
+    );
+  }, [state.activosSeleccionados]);
+
+  // Toggle selección de activo (para salidas)
+  const handleToggleActivo = (activo: Activos) => {
+    if (!activo.id) return;
+
+    const isSelected = selectedIds.has(activo.id);
+
+    if (isSelected) {
+      const index = state.activosSeleccionados.findIndex(
+        (item) => item.activo.id === activo.id
+      );
+      if (index !== -1) {
+        dispatch({ type: 'REMOVE_ACTIVO', payload: index });
+      }
+    } else {
+      const nuevoItem: ActivoSeleccionado = {
+        activo,
+        cantidad: activo.cantidad || 1,
+        isNew: false,
+      };
+      dispatch({ type: 'ADD_ACTIVO', payload: nuevoItem });
+    }
   };
 
-  // Agregar activo existente
-  const handleAddActivo = (activo: Activos) => {
-    if (isSelected(activo.id)) return;
-
+  // Agregar activo nuevo (para entradas)
+  const handleAgregarNuevoActivo = (activo: Partial<Activos>, categoriaId: number) => {
     const nuevoItem: ActivoSeleccionado = {
-      activo,
-      cantidad: 1,
-      isNew: false,
+      activo: {
+        ...activo,
+        id: undefined,
+        categoria_id: categoriaId,
+      } as Activos,
+      cantidad: activo.cantidad || 1,
+      isNew: true,
     };
     dispatch({ type: 'ADD_ACTIVO', payload: nuevoItem });
+
+    // Limpiar el estado guardado de esta categoría después de agregar
+    setFormDataPorCategoria((prev) => {
+      const newMap = new Map(prev);
+      newMap.delete(categoriaId);
+      return newMap;
+    });
   };
 
-  // Remover activo
+  // Remover activo seleccionado
   const handleRemoveActivo = (index: number) => {
     dispatch({ type: 'REMOVE_ACTIVO', payload: index });
   };
 
   // Actualizar cantidad
-  const handleCantidadChange = (index: number, cantidad: number) => {
+  const handleUpdateCantidad = (index: number, cantidad: number) => {
     dispatch({
       type: 'UPDATE_ACTIVO',
       payload: { index, updates: { cantidad } },
     });
   };
 
-  // Agregar activo nuevo (solo para entradas)
-  const handleAddNuevoActivo = () => {
-    if (!nuevoActivo.marca || !nuevoActivo.modelo) return;
-
-    const nuevoItem: ActivoSeleccionado = {
-      activo: {
-        ...nuevoActivo,
-        id: undefined,
-      } as Activos,
-      cantidad: 1,
-      isNew: true,
-    };
-    dispatch({ type: 'ADD_ACTIVO', payload: nuevoItem });
-    setNuevoActivo({});
-    setShowForm(false);
-  };
-
-  // Actualizar datos del acta CB
-  const handleActaCBChange = (field: string, value: string) => {
+  // Actualizar observación
+  const handleUpdateObservacion = (index: number, observacion: string) => {
     dispatch({
-      type: 'SET_DATOS_ACTA_CB',
-      payload: {
-        ...state.datosActaCB,
-        actaControlBienes: state.datosActaCB?.actaControlBienes || '',
-        fechaActa: state.datosActaCB?.fechaActa || '',
-        codigoCB: state.datosActaCB?.codigoCB || '',
-        [field]: value,
-      },
+      type: 'UPDATE_ACTIVO',
+      payload: { index, updates: { observacion } },
     });
   };
 
@@ -85,256 +158,136 @@ export function Step2Activos() {
     <div className="step-container">
       <div className="step-header">
         <h2 className="step-title">
-          {isEntrada ? 'Registro de Activos' : 'Seleccion de Activos'}
+          {esDevolucion
+            ? 'Activos a Devolver'
+            : isEntrada
+              ? 'Registro de Activos'
+              : 'Selección de Activos'}
         </h2>
         <p className="step-description">
-          {isEntrada
-            ? 'Registre los activos que ingresan al inventario'
-            : 'Seleccione los activos que salen del inventario'}
+          {esDevolucion
+            ? 'Revise los activos que serán devueltos'
+            : isEntrada
+              ? 'Registre los activos que ingresan al inventario'
+              : 'Seleccione los activos que salen del inventario'}
         </p>
       </div>
 
-      {/* Datos de Acta CB (solo para ingreso desde Control de Bienes) */}
-      {state.subtipoEntrada === 'INGRESO_CB' && (
+      {/* ============================================ */}
+      {/* MODO DEVOLUCIÓN: Solo mostrar activos pre-cargados */}
+      {/* ============================================ */}
+      {esDevolucion && (
         <div className="step-section">
-          <label className="step-label">Datos del Acta de Control de Bienes</label>
-          <div className="step-form">
-            <div className="step-form-row">
-              <div className="step-form-group">
-                <InputX
-                  name="actaControlBienes"
-                  label="Numero de Acta"
-                  placeholder="Ej: CB-2026-001"
-                  defaultValue={state.datosActaCB?.actaControlBienes}
-                  onChange={(value) => handleActaCBChange('actaControlBienes', value as string)}
-                  rules={{
-                    validations: [{ type: 'required', message: 'Requerido' }],
-                  }}
-                />
-              </div>
-              <div className="step-form-group">
-                <InputX
-                  name="fechaActa"
-                  label="Fecha del Acta"
-                  type="date"
-                  defaultValue={state.datosActaCB?.fechaActa}
-                  onChange={(value) => handleActaCBChange('fechaActa', value as string)}
-                  rules={{
-                    validations: [{ type: 'required', message: 'Requerido' }],
-                  }}
-                />
-              </div>
-              <div className="step-form-group">
-                <InputX
-                  name="codigoCB"
-                  label="Codigo CB"
-                  placeholder="Ej: CB-2026-5678"
-                  defaultValue={state.datosActaCB?.codigoCB}
-                  onChange={(value) => handleActaCBChange('codigoCB', value as string)}
-                  rules={{
-                    validations: [{ type: 'required', message: 'Requerido' }],
-                  }}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Buscador de activos (para salidas o devoluciones) */}
-      {(isSalida || isDevolucion()) && (
-        <div className="step-section">
-          <label className="step-label">Buscar Activos Disponibles</label>
-          <div className="activos-search">
-            <InputX
-              name="buscarActivo"
-              placeholder="Buscar por codigo, marca o modelo..."
-              defaultValue={searchTerm}
-              onChange={(value) => setSearchTerm(value as string)}
-            />
-          </div>
-
-          {loading && <p style={{ color: '#64748b' }}>Buscando...</p>}
-          {error && <p style={{ color: '#ef4444' }}>{error}</p>}
-
-          <div className="activos-lista">
-            {activos.map((activo) => (
-              <div
-                key={activo.id}
-                className={`activo-item ${isSelected(activo.id) ? 'selected' : ''}`}
-                onClick={() => handleAddActivo(activo)}
-              >
-                <input
-                  type="checkbox"
-                  className="activo-item-checkbox"
-                  checked={isSelected(activo.id)}
-                  readOnly
-                />
-                <div className="activo-item-info">
-                  <span className="activo-item-nombre">
-                    {activo.marca} {activo.modelo}
-                  </span>
-                  <span className="activo-item-meta">
-                    {activo.codigo_inventario_local || 'Sin codigo'} |
-                    Cantidad: {activo.cantidad || 1} |
-                    Estado: {activo.estado_activo}
-                  </span>
-                </div>
-              </div>
-            ))}
-            {activos.length === 0 && !loading && (
-              <p style={{ textAlign: 'center', color: '#64748b', padding: '1rem' }}>
-                No se encontraron activos
-              </p>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* Formulario para nuevo activo (solo para entradas que no son devoluciones) */}
-      {isEntrada && !isDevolucion() && (
-        <div className="step-section">
-          {!showForm ? (
-            <div className="persona-form-toggle">
-              <button
-                type="button"
-                className="persona-form-toggle-btn"
-                onClick={() => setShowForm(true)}
-              >
-                + Agregar Nuevo Activo
-              </button>
-            </div>
-          ) : (
-            <div className="step-form" style={{ background: '#f8fafc', padding: '1rem', borderRadius: '0.375rem' }}>
-              <h4 style={{ margin: '0 0 1rem', color: '#334155' }}>Nuevo Activo</h4>
-              <div className="step-form-row">
-                <div className="step-form-group">
-                  <InputX
-                    name="marca"
-                    label="Marca"
-                    placeholder="Ej: Samsung"
-                    defaultValue={nuevoActivo.marca}
-                    onChange={(value) => setNuevoActivo({ ...nuevoActivo, marca: value as string })}
-                    rules={{
-                      validations: [{ type: 'required', message: 'Requerido' }],
-                    }}
-                  />
-                </div>
-                <div className="step-form-group">
-                  <InputX
-                    name="modelo"
-                    label="Modelo"
-                    placeholder="Ej: Galaxy S23"
-                    defaultValue={nuevoActivo.modelo}
-                    onChange={(value) => setNuevoActivo({ ...nuevoActivo, modelo: value as string })}
-                    rules={{
-                      validations: [{ type: 'required', message: 'Requerido' }],
-                    }}
-                  />
-                </div>
-              </div>
-              <div className="step-form-row">
-                <div className="step-form-group">
-                  <InputX
-                    name="unidad_medida"
-                    label="Unidad de Medida"
-                    placeholder="Ej: UNIDAD"
-                    defaultValue={nuevoActivo.unidad_medida}
-                    onChange={(value) => setNuevoActivo({ ...nuevoActivo, unidad_medida: value as string })}
-                  />
-                </div>
-                <div className="step-form-group">
-                  <InputX
-                    name="observaciones"
-                    label="Observaciones"
-                    placeholder="Observaciones adicionales..."
-                    defaultValue={nuevoActivo.observaciones}
-                    onChange={(value) => setNuevoActivo({ ...nuevoActivo, observaciones: value as string })}
-                  />
-                </div>
-              </div>
-              <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end' }}>
-                <button
-                  type="button"
-                  className="resumen-btn resumen-btn-secondary"
-                  onClick={() => {
-                    setShowForm(false);
-                    setNuevoActivo({});
-                  }}
-                >
-                  Cancelar
-                </button>
-                <button
-                  type="button"
-                  className="resumen-btn resumen-btn-primary"
-                  onClick={handleAddNuevoActivo}
-                  disabled={!nuevoActivo.marca || !nuevoActivo.modelo}
-                >
-                  Agregar
-                </button>
-              </div>
+          <ActivosSeleccionados
+            activos={state.activosSeleccionados}
+            onRemove={handleRemoveActivo}
+            onUpdateCantidad={handleUpdateCantidad}
+            readOnly={true}
+          />
+          {state.activosSeleccionados.length === 0 && (
+            <div className="step-empty-message">
+              No hay activos cargados para devolver
             </div>
           )}
         </div>
       )}
 
-      {/* Lista de activos seleccionados */}
-      {state.activosSeleccionados.length > 0 && (
-        <div className="step-section activos-seleccionados">
-          <div className="activos-seleccionados-header">
-            <span className="activos-seleccionados-title">Activos Seleccionados</span>
-            <span className="activos-seleccionados-count">
-              {state.activosSeleccionados.length} item(s)
-            </span>
+      {/* ============================================ */}
+      {/* MODO SALIDA: Categorías + Grid de activos */}
+      {/* ============================================ */}
+      {isSalida && !esDevolucion && (
+        <div className="step-section">
+          <div className="step-activos-layout">
+            {/* Panel izquierdo: Categorías */}
+            <CategoriasList
+              categorias={categorias}
+              loading={categoriasLoading}
+              categoriaSeleccionada={categoriaSeleccionada}
+              onSelectCategoria={handleSelectCategoria}
+              getActivosCount={getActivosCountByCategoria}
+            />
+
+            {/* Panel derecho: Grid de activos */}
+            <ActivosGrid
+              categoriaSeleccionada={categoriaSeleccionada}
+              activos={activos}
+              loading={activosLoading}
+              error={activosError}
+              searchTerm={searchTerm}
+              onSearchChange={setSearchTerm}
+              selectedIds={selectedIds}
+              onToggleActivo={handleToggleActivo}
+            />
           </div>
-          <div className="activos-lista">
-            {state.activosSeleccionados.map((item, index) => (
-              <div key={index} className="activo-item selected">
-                <div className="activo-item-info">
-                  <span className="activo-item-nombre">
-                    {item.activo.marca} {item.activo.modelo}
-                    {item.isNew && (
-                      <span style={{
-                        marginLeft: '0.5rem',
-                        fontSize: '0.75rem',
-                        background: '#22c55e',
-                        color: '#fff',
-                        padding: '0.125rem 0.375rem',
-                        borderRadius: '0.25rem'
-                      }}>
-                        Nuevo
-                      </span>
-                    )}
-                  </span>
-                  <span className="activo-item-meta">
-                    {item.activo.codigo_inventario_local || 'Sin codigo'}
-                  </span>
-                </div>
-                <div className="activo-item-cantidad">
-                  <input
-                    type="number"
-                    min="1"
-                    value={item.cantidad}
-                    onChange={(e) => handleCantidadChange(index, parseInt(e.target.value) || 1)}
-                  />
-                  <button
-                    type="button"
-                    style={{
-                      background: '#ef4444',
-                      color: '#fff',
-                      border: 'none',
-                      borderRadius: '0.25rem',
-                      padding: '0.25rem 0.5rem',
-                      cursor: 'pointer',
-                    }}
-                    onClick={() => handleRemoveActivo(index)}
-                  >
-                    X
-                  </button>
-                </div>
+
+          {/* Activos seleccionados */}
+          <ActivosSeleccionados
+            activos={state.activosSeleccionados}
+            onRemove={handleRemoveActivo}
+            onUpdateCantidad={handleUpdateCantidad}
+            onUpdateObservacion={handleUpdateObservacion}
+            showCategoria={true}
+          />
+        </div>
+      )}
+
+      {/* ============================================ */}
+      {/* MODO ENTRADA: Categorías + Formulario nuevo activo */}
+      {/* ============================================ */}
+      {isEntrada && !esDevolucion && (
+        <div className="step-section">
+          <div className="step-activos-layout">
+            {/* Panel izquierdo: Categorías */}
+            <CategoriasList
+              categorias={categorias}
+              loading={categoriasLoading}
+              categoriaSeleccionada={categoriaSeleccionada}
+              onSelectCategoria={(cat) => {
+                handleSelectCategoria(cat);
+                setShowNuevoForm(true);
+              }}
+              getActivosCount={getActivosCountByCategoria}
+            />
+
+            {/* Panel derecho: Formulario de nuevo activo */}
+            {showNuevoForm || categoriaSeleccionada ? (
+              <NuevoActivoForm
+                categoriaSeleccionada={categoriaSeleccionada}
+                onAgregarActivo={handleAgregarNuevoActivo}
+                onCancelar={() => {
+                  setShowNuevoForm(false);
+                  handleSelectCategoria(null);
+                }}
+                formData={currentFormData}
+                onFormDataChange={setCurrentFormData}
+                errors={formErrors}
+                onErrorsChange={setFormErrors}
+              />
+            ) : (
+              <div className="step-activos-placeholder">
+                <svg
+                  width="48"
+                  height="48"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                >
+                  <path d="M12 5v14M5 12h14" />
+                </svg>
+                <p>Selecciona una categoría para agregar un nuevo activo</p>
               </div>
-            ))}
+            )}
           </div>
+
+          {/* Activos agregados */}
+          <ActivosSeleccionados
+            activos={state.activosSeleccionados}
+            onRemove={handleRemoveActivo}
+            onUpdateCantidad={handleUpdateCantidad}
+            onUpdateObservacion={handleUpdateObservacion}
+            showCategoria={true}
+          />
         </div>
       )}
 
